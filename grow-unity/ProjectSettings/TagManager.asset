@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Fire
   - selectable
+  - scatter
   layers:
   - Default
   - TransparentFX

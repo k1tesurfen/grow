@@ -32,10 +32,6 @@ public class SelectionManager : MonoBehaviour
         if (_selection != null)
         {
             _selectionResponse.OnSelect(_selection);
-            if (Input.GetMouseButtonDown(1))
-            {
-                _selection.parent = transform.GetChild(0).transform;
-            }
         }
     }
 }

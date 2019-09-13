@@ -12,10 +12,6 @@ internal class HighlightSelectionResponse : MonoBehaviour, ISelectionResponse
         {
             selectionRenderer.material = highlightMaterial;
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            selection.parent = transform;
-        }
     }
 
     public void OnDeselect(Transform selection)
