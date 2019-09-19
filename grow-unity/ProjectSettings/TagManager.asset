@@ -7,6 +7,7 @@ TagManager:
   - Fire
   - selectable
   - scatter
+  - target
   layers:
   - Default
   - TransparentFX
