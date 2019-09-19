@@ -15,7 +15,7 @@ public class Throw : MonoBehaviour
     public float distanceThreshold = 2f;
     public bool canHold = true;
     public bool isHolding = false;
-    private bool flying = false;
+    public bool flying = false;
 
     // Update is called once per frame
     void Update()
@@ -34,6 +34,7 @@ public class Throw : MonoBehaviour
                 transform.parent = gm.hand.transform;
                 transform.localPosition = gm.hand.transform.localPosition;
 
+                //if left mouse button pressed throw the object
                 if (Input.GetMouseButtonUp(0))
                 {
                     Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
@@ -68,6 +69,7 @@ public class Throw : MonoBehaviour
             if (distance <= distanceThreshold)
             {
                 isHolding = true;
+                GetComponent<Attractor>().attractable = true;
                 GetComponent<Rigidbody>().useGravity = false;
                 GetComponent<Rigidbody>().detectCollisions = true;
             }
@@ -94,10 +96,13 @@ public class Throw : MonoBehaviour
     {
         if (other.transform.gameObject.tag == "scatter")
         {
+            if(other.gameObject.name == "Target"){
+                other.GetComponent<Target>().hit.transform.position = transform.position;
+            }
             if (flying)
             {
                 gm.scatter.Explode(transform.position);
-                Destroy(transform.gameObject);
+                Destroy(gameObject);
             }
         }
     }
