@@ -20,7 +20,7 @@ public class Crosshair : MonoBehaviour
 
     private void Update()
     {
-        if (isMoving || player.transform.position.y > 1.0f)
+        if (IsMoving || player.transform.position.y > 1.0f)
         {
             currentSize = Mathf.Lerp(currentSize, maxSize, Time.deltaTime * speed);
         }
@@ -31,7 +31,7 @@ public class Crosshair : MonoBehaviour
         crosshair.sizeDelta = new Vector2(currentSize, currentSize);
     }
 
-    bool isMoving
+    bool IsMoving
     {
         get
         {

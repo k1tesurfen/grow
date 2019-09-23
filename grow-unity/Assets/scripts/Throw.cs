@@ -12,7 +12,7 @@ public class Throw : MonoBehaviour
     private Vector3 objectPos;
     private float distance;
 
-    public float distanceThreshold = 2f;
+    public float distanceThreshold = 4f;
     public bool canHold = true;
     public bool isHolding = false;
     public bool flying = false;
@@ -20,7 +20,9 @@ public class Throw : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        distance = Vector3.Distance(transform.position, gm.hand.transform.position);
+        //calculate distance by square magnitude to avoid costly square operation
+        distance = (transform.position - gm.hand.transform.position).sqrMagnitude;
+
         if (distance >= distanceThreshold)
         {
             isHolding = false;
@@ -34,8 +36,8 @@ public class Throw : MonoBehaviour
                 transform.parent = gm.hand.transform;
                 transform.localPosition = gm.hand.transform.localPosition;
 
-                //if left mouse button pressed throw the object
-                if (Input.GetMouseButtonUp(0))
+                //if right mouse button pressed throw the object
+                if (Input.GetMouseButtonUp(1))
                 {
                     Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                     RaycastHit hit;
@@ -49,6 +51,7 @@ public class Throw : MonoBehaviour
                     }
                     flying = true;
                     isHolding = false;
+                    GetComponent<Attractor>().doAttract = true;
                 }
             }
             else
@@ -63,23 +66,23 @@ public class Throw : MonoBehaviour
 
     private void OnMouseOver()
     {
-        //checks whether left mousebutton was pressed and picks item up
-        if (Input.GetMouseButtonUp(1))
+        //checks whether right mousebutton was pressed and picks item up
+        if (Input.GetMouseButtonDown(1))
         {
             if (distance <= distanceThreshold)
             {
                 isHolding = true;
-                GetComponent<Attractor>().attractable = true;
                 GetComponent<Rigidbody>().useGravity = false;
                 GetComponent<Rigidbody>().detectCollisions = true;
             }
         }
     }
-
+    
     private void OnMouseEnter()
     {
         if (distance <= distanceThreshold)
         {
+            //activate hover effect on snowball
             GetComponent<Renderer>().material = highlightMaterial;
         }
     }
@@ -88,6 +91,7 @@ public class Throw : MonoBehaviour
     {
         if (distance <= distanceThreshold)
         {
+            //deactivate hover effect on snowball
             transform.GetComponent<Renderer>().material = defaultMaterial;
         }
     }
