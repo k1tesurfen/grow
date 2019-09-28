@@ -8,7 +8,9 @@ public class Throw : MonoBehaviour
     [SerializeField] public Material highlightMaterial;
     [SerializeField] public Material defaultMaterial;
 
-    public float throwforce = 600;
+    private SphereCollider groundCollider;
+
+    public float throwforce = 800;
     private Vector3 objectPos;
     private float distance;
 
@@ -17,6 +19,12 @@ public class Throw : MonoBehaviour
     public bool isHolding = false;
     public bool flying = false;
 
+    void OnEnable()
+    {
+        groundCollider = gameObject.AddComponent<SphereCollider>();
+        groundCollider.radius = 0.062f;
+        groundCollider.isTrigger = false;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -51,6 +59,7 @@ public class Throw : MonoBehaviour
                     }
                     flying = true;
                     isHolding = false;
+                    Destroy(groundCollider);
                     GetComponent<Attractor>().doAttract = true;
                 }
             }
@@ -73,11 +82,11 @@ public class Throw : MonoBehaviour
             {
                 isHolding = true;
                 GetComponent<Rigidbody>().useGravity = false;
-                GetComponent<Rigidbody>().detectCollisions = true;
+                //GetComponent<Rigidbody>().detectCollisions = true;
             }
         }
     }
-    
+
     private void OnMouseEnter()
     {
         if (distance <= distanceThreshold)
@@ -96,18 +105,13 @@ public class Throw : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    //detects if snowball hits anything, creates impact and destroys snowball gameobject
+    private void OnCollisionEnter(Collision col)
     {
-        if (other.transform.gameObject.tag == "scatter")
+        if (flying)
         {
-            if(other.gameObject.name == "Target"){
-                other.GetComponent<Target>().hit.transform.position = transform.position;
-            }
-            if (flying)
-            {
-                gm.scatter.Explode(transform.position);
-                Destroy(gameObject);
-            }
+            gm.scatter.Explode(col.GetContact(0).point);
+            Destroy(gameObject);
         }
     }
 }

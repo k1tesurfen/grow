@@ -45,4 +45,10 @@ public class Crosshair : MonoBehaviour
             }
         }
     }
+    
+    //returns the angle from viewing direction to a given object
+    public float AngleTowardsObject(GameObject obj)
+    {
+        return Vector3.Angle(Camera.main.transform.forward, obj.transform.position - Camera.main.transform.position);
+    }
 }

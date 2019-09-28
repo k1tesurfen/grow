@@ -11,4 +11,9 @@ public class Target : MonoBehaviour
     {
         onTarget = gameObject.GetComponent<Renderer>().isVisible;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        hit.transform.position = collision.GetContact(0).point;
+    }
 }
