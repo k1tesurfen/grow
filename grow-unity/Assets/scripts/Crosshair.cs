@@ -15,7 +15,7 @@ public class Crosshair : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        crosshair = GetComponent<RectTransform>(); 
+        crosshair = GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -31,21 +31,8 @@ public class Crosshair : MonoBehaviour
         crosshair.sizeDelta = new Vector2(currentSize, currentSize);
     }
 
-    bool IsMoving
-    {
-        get
-        {
-            if(Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) 
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-    
+    private bool IsMoving => System.Math.Abs(Input.GetAxis("Horizontal")) > 0f || System.Math.Abs(Input.GetAxis("Vertical")) > 0f;
+
     //returns the angle from viewing direction to a given object
     public float AngleTowardsObject(GameObject obj)
     {

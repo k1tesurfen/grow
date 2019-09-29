@@ -6,12 +6,13 @@ public class Attractor : MonoBehaviour
     const float G = 66.74f;
 
     public int mass;
-    public float rotateSpeed = 200f;
     public static List<Attractor> Attractables;
     public bool isAttractor = false;
-    public bool isPreAttractor = false;
+
+    //should the obToAttract be attracted or not
     public bool doAttract = false;
     private float lifeSpan = 500f;
+    public float attractionRadius = 10f;
 
     void FixedUpdate()
     {
@@ -57,22 +58,28 @@ public class Attractor : MonoBehaviour
     {
         Vector3 direction = transform.position - objToAttract.transform.position;
         float distance = direction.magnitude;
-        if (distance < 1f)
+
+        if (distance < 0.3f)
         {
-            //objToAttract.GetComponent<Rigidbody>().useGravity = false;
             return;
         }
-        if (distance < 2f)
+        if (distance < attractionRadius)
         {
-            if (isPreAttractor)
-            {
-                Destroy(gameObject);
-            }
+            //use homing as attraction mode. 
+            Vector3 velocity = objToAttract.GetComponent<Rigidbody>().velocity;
+            Vector3 targetVelocity = Vector3.Slerp(velocity.normalized, (direction).normalized, 1 - (distance / attractionRadius));
+            objToAttract.GetComponent<Rigidbody>().velocity = targetVelocity * velocity.magnitude;
+            return;
+        }
+        else
+        {
+            //use mass and gravity as attraction mode
+            //force magnitude calculated by (m1 * m2) / dist^2
+            float forceMagnitude = G * (mass * objToAttract.mass) / Mathf.Pow(distance, 2);
+            Vector3 force = direction.normalized * Mathf.Clamp(forceMagnitude, 0f, 1000f);
+
+            objToAttract.GetComponent<Rigidbody>().AddForce(force);
         }
 
-        float forceMagnitude = G * (mass * objToAttract.mass) / Mathf.Pow(distance, 2);
-        Vector3 force = direction.normalized * Mathf.Clamp(forceMagnitude, 0f, 1000f);
-
-        objToAttract.GetComponent<Rigidbody>().AddForce(force);
     }
 }

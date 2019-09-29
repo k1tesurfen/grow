@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("References:")]
     public Scatter scatter;
+    public Target target;
     public GameObject hand;
 
     public GameObject snowball;

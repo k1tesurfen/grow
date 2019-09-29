@@ -81,7 +81,7 @@ public class Throw : MonoBehaviour
             if (distance <= distanceThreshold)
             {
                 isHolding = true;
-                GetComponent<Rigidbody>().useGravity = false;
+                //GetComponent<Rigidbody>().useGravity = false;
                 //GetComponent<Rigidbody>().detectCollisions = true;
             }
         }
@@ -110,6 +110,14 @@ public class Throw : MonoBehaviour
     {
         if (flying)
         {
+            //if the hit object is target, register the hit
+            if (col.collider.transform.gameObject.name
+                == "Target")
+            {
+                gm.target.RegisterHit(col.GetContact(0).point);
+            }
+
+            //snowball destroy sequence
             gm.scatter.Explode(col.GetContact(0).point);
             Destroy(gameObject);
         }
