@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [Header("References:")]
+    public Logger logger;
     public Scatter scatter;
     public Target target;
     public GameObject hand;
@@ -23,5 +25,10 @@ public class GameManager : MonoBehaviour
         {
             Instantiate(snowball, new Vector3(-7 + point.x, 0.2f, -3 + point.y), Quaternion.identity);
         }
+    }
+
+    public string GetTimeStamp()
+    {
+        return DateTime.UtcNow.ToString("HH:mm:ss:fff");
     }
 }

@@ -2,6 +2,15 @@
 
 public class Throw : MonoBehaviour
 {
+    public enum Phase
+    {
+        Base,
+        Searching,
+        Holding,
+        Flying,
+        Result
+    }
+
     [Header("References:")]
     public GameManager gm;
 
@@ -18,6 +27,9 @@ public class Throw : MonoBehaviour
     public bool canHold = true;
     public bool isHolding = false;
     public bool flying = false;
+
+    public Phase throwPhase = Phase.Base;
+
 
     void OnEnable()
     {
@@ -117,9 +129,17 @@ public class Throw : MonoBehaviour
                 gm.target.RegisterHit(col.GetContact(0).point);
             }
 
+            //log throw properties
+            gm.logger.Log(col.collider.transform.gameObject.name);
+
             //snowball destroy sequence
             gm.scatter.Explode(col.GetContact(0).point);
             Destroy(gameObject);
         }
+    }
+
+    private void Log()
+    {
+
     }
 }
