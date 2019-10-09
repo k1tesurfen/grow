@@ -36,10 +36,12 @@ public class EnvironmentGenerator : MonoBehaviour
         //place trees
         foreach (Vector3 ver in vertices)
         {
+            //the mesh model is sunken into the ground. -4.2f 
             if (ver.y > -4.2f && ver.y < 25f && ver.magnitude < 290f && Random.Range(0, 2) > 0)
             {
                 if (Mathf.PerlinNoise(ver.x * perlinRate, ver.y * perlinRate) > 0.38f)
                 {
+                    //instantiate random tree from trees array. 
                     Instantiate(trees[Random.Range(0, trees.Length)],
                         (ApplyTransform(ver, transform) + new Vector3(Random.Range(-2f, 2f), Random.Range(-0.2f, -0.08f), Random.Range(-2f, 2f))),
                         Quaternion.Euler(new Vector3(0, Random.Range(0, 180), 0)), treeObject.transform);
@@ -54,6 +56,7 @@ public class EnvironmentGenerator : MonoBehaviour
             {
                 if (Mathf.PerlinNoise(ver.x * perlinRate, ver.y * perlinRate) > 0.45f)
                 {
+                    //instantiate random stones from stones array
                     Instantiate(rocks[Random.Range(0, rocks.Length)],
                         (ApplyTransform(ver, transform) + new Vector3(Random.Range(-2f, 2f) + 1f, Random.Range(0f, 0.7f), Random.Range(-2f, 2f) - 1f)),
                         Quaternion.Euler(new Vector3(0, Random.Range(0, 180), 0)), rockObject.transform);

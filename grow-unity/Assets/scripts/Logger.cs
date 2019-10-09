@@ -22,6 +22,7 @@ public class Logger : MonoBehaviour
     void Update()
     {
 
+        writer.Write(DateTime.Now.ToString("dd_MM_yyyy-HH_mm_ss"));
     }
 
     void OnApplicationQuit()

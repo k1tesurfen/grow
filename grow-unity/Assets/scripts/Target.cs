@@ -29,6 +29,7 @@ public class Target : MonoBehaviour
     {
         hitAnimator.Play("hit-fadeaway", 0, 0f);
         hit.transform.position = pos;
+        //@TODO: log hit pos
         Debug.Log("Distance to target center:\n" + (center.transform.position - pos).magnitude);
     }
 }
