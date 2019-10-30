@@ -137,9 +137,4 @@ public class Throw : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    private void Log()
-    {
-
-    }
 }

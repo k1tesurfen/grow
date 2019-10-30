@@ -11,19 +11,29 @@ public class GameManager : MonoBehaviour
     public GameObject hand;
 
     public GameObject snowball;
+    public QuestionaireManager qm;
 
+    public FortressManager fm;
     //poisson disk spawning
-    public float radius = 1;
-    public Vector2 regionSize = new Vector2(15, 15);
-    List<Vector2> spawnPoints;
+    //public float radius = 1;
+    //public Vector2 regionSize = new Vector2(15, 15);
+    //List<Vector2> spawnPoints;
 
     // Start is called before the first frame update
     void Start()
     {
-        spawnPoints = PoissonDiskSpawn.GenerateSpawns(radius, regionSize);
-        foreach (Vector2 point in spawnPoints)
+        //spawnPoints = PoissonDiskSpawn.GenerateSpawns(radius, regionSize);
+        //foreach (Vector2 point in spawnPoints)
+        //{
+        //    Instantiate(snowball, new Vector3(-7 + point.x, 0.2f, -3 + point.y), Quaternion.identity);
+        //}
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            Instantiate(snowball, new Vector3(-7 + point.x, 0.2f, -3 + point.y), Quaternion.identity);
+            fm.HideFortress();
+            qm.StartNextQuestionaire();
         }
     }
 
