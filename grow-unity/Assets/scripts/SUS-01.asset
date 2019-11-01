@@ -19,5 +19,5 @@ MonoBehaviour:
   - 25
   - 25
   - 25
-  - 25
-  - 25
+  answerOptionsImages:
+  - {fileID: 21300032, guid: d40c191aa46654db7a426d6a1fa3aa30, type: 3}
