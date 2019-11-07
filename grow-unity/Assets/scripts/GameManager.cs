@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,9 +9,12 @@ public class GameManager : MonoBehaviour
     public Scatter scatter;
     public Target target;
     public GameObject hand;
+    public CompetitionManager competition;
 
     public GameObject snowball;
     public QuestionaireManager qm;
+
+    public string playerName;
 
     public FortressManager fm;
     //poisson disk spawning
@@ -27,6 +30,8 @@ public class GameManager : MonoBehaviour
         //{
         //    Instantiate(snowball, new Vector3(-7 + point.x, 0.2f, -3 + point.y), Quaternion.identity);
         //}
+        competition.StartGame();
+        competition.UpdateLeaderBoard(25);
     }
     private void Update()
     {
@@ -35,10 +40,15 @@ public class GameManager : MonoBehaviour
             fm.HideFortress();
             qm.StartNextQuestionaire();
         }
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            competition.UpdateLeaderBoard(50);
+        }
     }
 
     public string GetTimeStamp()
     {
         return DateTime.UtcNow.ToString("HH:mm:ss:fff");
     }
+
 }

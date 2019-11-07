@@ -31,5 +31,6 @@ public class Target : MonoBehaviour
         hit.transform.position = pos;
         //@TODO: log hit pos
         Debug.Log("Distance to target center:\n" + (center.transform.position - pos).magnitude);
+
     }
 }
