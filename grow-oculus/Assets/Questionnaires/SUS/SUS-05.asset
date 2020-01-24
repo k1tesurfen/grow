@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6019a6432909b9849bb3db3d0d46bfcf, type: 3}
+  m_Name: SUS-05
+  m_EditorClassIdentifier: 
+  questionText: "Consider your memory of being in the virtual environment. How similar
+    in termsof the structure of the memory is this to the structure of the memory
+    of otherplaces you have been today? By \u2018structure of the memory\u2019 consider
+    things likethe extent to which you have a visual memory of the virtual environment,
+    whetherthat memory is in colour, the extent to which the memory seems vivid or
+    realistic,5its size, location in your imagination, the extent to which it is panoramic
+    in yourimagination, and other such structural elements."
+  answerOptionsLabels:
+  - Not at all
+  - 
+  - 
+  - 
+  - 
+  - 
+  - Very much so
+  answerOptionsImages: []

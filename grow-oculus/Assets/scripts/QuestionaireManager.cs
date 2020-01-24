@@ -17,6 +17,7 @@ public class QuestionaireManager : MonoBehaviour
         {
             //abort questionaire mode and continue with cool conditions and stuff
             gm.fm.ShowFortress();
+            questionaireMode = false;
             return;
         }
 

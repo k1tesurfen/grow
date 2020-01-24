@@ -8,6 +8,7 @@ public class FortressManager : MonoBehaviour
 
     private bool initialCall = true;
 
+
     private void Start()
     {
         anim.Play("idle",0, 0f); 

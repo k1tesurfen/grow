@@ -16,7 +16,11 @@ public class Questionaire : MonoBehaviour
 
     public QOption qOption;
 
+    public float gapAngle = 20f;
+
     public int currentQuestion;
+    public QOption[] currentQuestionOptions;
+    public int selection;
     public TextMeshPro currentQuestionLabel;
 
     public void InitQuestionaire()
@@ -35,9 +39,10 @@ public class Questionaire : MonoBehaviour
         Question q = questions[n];
 
         currentQuestionLabel.text = q.questionText;
+        currentQuestionOptions = new QOption[q.answerOptionsLabels.Length];
 
         //answer buckets get distributed on the hemisphere in front of the player
-        float startAngle = ((q.answerOptionsLabels.Length - 1f) / 2f) * -25f;
+        float startAngle = ((q.answerOptionsLabels.Length - 1f) / 2f) * -gapAngle;
 
         for(int i=0; i<q.answerOptionsLabels.Length; i++)
         {
@@ -49,17 +54,24 @@ public class Questionaire : MonoBehaviour
             {
                 option.optionImage.sprite = q.answerOptionsImages[i];
             }
-            Quaternion rotation = Quaternion.Euler(new Vector3(0f, startAngle + i * 25, 0f));
+            Quaternion rotation = Quaternion.Euler(new Vector3(0f, startAngle + i * gapAngle, 0f));
             option.transform.rotation = rotation;
-            option.transform.position = (rotation * (1.5f *Vector3.forward)) + 0.7f * Vector3.up;
+            option.transform.position = (rotation * (0.8f * Vector3.forward)) + 0.7f * Vector3.up;
         }
     }
 
-    //sets answer for current question.
-    public void SetAnswer(int value)
+    public void SetSelection(int value)
     {
-        answers[currentQuestion] = value;
+        selection = value;
+    }
+
+    //sets answer for current question.
+    public void SetAnswer()
+    {
+        answers[currentQuestion] = selection;
+
         currentQuestion++;
+
         if(transform.Find("options") != null)
         {
             Destroy(transform.Find("options").gameObject);

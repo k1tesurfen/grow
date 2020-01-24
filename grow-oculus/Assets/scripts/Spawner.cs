@@ -2,6 +2,8 @@
 
 public class Spawner : MonoBehaviour
 {
+    public GameManager gm;
+
     public GameObject spawnObject;
     public Collider spawnZone;
 
@@ -13,7 +15,7 @@ public class Spawner : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.GetComponent<OVRGrabbable>() != null)
+        if (other.gameObject.GetComponent<OVRGrabbable>() != null && !gm.qm.questionaireMode)
         {
             Instantiate(spawnObject, transform);
         }

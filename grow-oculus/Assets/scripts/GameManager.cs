@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         {
             fm.HideFortress();
             qm.StartNextQuestionaire();
+            qm.questionaireMode = true;
         }
         if (Input.GetKeyDown(KeyCode.Backspace))
         {

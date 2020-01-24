@@ -20,7 +20,7 @@ public class QOption : MonoBehaviour
     {
         if (other.CompareTag("selectable"))
         {
-            q.SetAnswer(value);
+            q.SetSelection(value);
         }
     }
 }
