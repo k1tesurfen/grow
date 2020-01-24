@@ -39,7 +39,7 @@ public class CompetitionManager : MonoBehaviour
 
     public void EndGame()
     {
-        //log final points;
+        //TODO: log final points;
 
         leaderBoardLabel.gameObject.SetActive(false);
         timerLabel.gameObject.SetActive(false);

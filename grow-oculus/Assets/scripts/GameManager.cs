@@ -8,10 +8,9 @@ public class GameManager : MonoBehaviour
     public Logger logger;
     public Scatter scatter;
     public Target target;
-    public GameObject hand;
     public CompetitionManager competition;
+    public GameObject hand;
 
-    public GameObject snowball;
     public QuestionaireManager qm;
 
     public string playerName;
@@ -25,11 +24,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //spawnPoints = PoissonDiskSpawn.GenerateSpawns(radius, regionSize);
-        //foreach (Vector2 point in spawnPoints)
-        //{
-        //    Instantiate(snowball, new Vector3(-7 + point.x, 0.2f, -3 + point.y), Quaternion.identity);
-        //}
         competition.StartGame();
         competition.UpdateLeaderBoard(25);
     }
