@@ -20,8 +20,10 @@ public class Questionaire : MonoBehaviour
 
     public int currentQuestion;
     public QOption[] currentQuestionOptions;
+    
     public int selection;
-    public TextMeshPro currentQuestionLabel;
+    private GameObject activeBucket;
+    private GameObject activeSnowball;
 
     public void InitQuestionaire()
     {
@@ -38,7 +40,7 @@ public class Questionaire : MonoBehaviour
 
         Question q = questions[n];
 
-        currentQuestionLabel.text = q.questionText;
+        qm.questionLabel.text = q.questionText;
         currentQuestionOptions = new QOption[q.answerOptionsLabels.Length];
 
         //answer buckets get distributed on the hemisphere in front of the player
@@ -56,16 +58,37 @@ public class Questionaire : MonoBehaviour
             }
             Quaternion rotation = Quaternion.Euler(new Vector3(0f, startAngle + i * gapAngle, 0f));
             option.transform.rotation = rotation;
-            option.transform.position = (rotation * (0.8f * Vector3.forward)) + 0.7f * Vector3.up;
+            option.transform.position = (rotation * (0.6f * Vector3.forward)) + 1.1f * Vector3.up;
         }
     }
 
-    public void SetSelection(int value)
+    //if a selection has been made this selection will update the value
+    public void SetSelection(int value, GameObject activeBucket, GameObject activeSnowball)
     {
         selection = value;
+
+        //remove all current selectionindicators
+        if(this.activeBucket != null)
+        {
+            this.activeBucket.GetComponent<QOption>().SetDefaultMaterial();
+        }
+        if (this.activeSnowball)
+        {
+            Destroy(this.activeSnowball);
+        }
+
+        //set selectionindicator
+        activeBucket.GetComponent<QOption>().SetActiveMaterial();
+
+        Destroy(activeSnowball.GetComponent<OVRGrabbable>());
+
+        //save current selectionindicators
+        this.activeSnowball = activeSnowball;
+        this.activeBucket = activeBucket;
     }
 
-    //sets answer for current question.
+    //the current selection is saved as answer of the question
+    //the currentQuestion is raised.
     public void SetAnswer()
     {
         answers[currentQuestion] = selection;
@@ -81,7 +104,7 @@ public class Questionaire : MonoBehaviour
             //all questions for this questionaire have been answered.
             //save questionaire to file
 
-            currentQuestionLabel.text = "";
+            qm.questionLabel.text = "";
             SaveQuestionaire(answers);
             qm.StartNextQuestionaire();
             //gameObject.SetActive(false);

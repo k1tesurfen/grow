@@ -11,6 +11,10 @@ public class QOption : MonoBehaviour
     public TextMeshPro optionLabel;
     public SpriteRenderer optionImage;
 
+    public MeshRenderer signal;
+    public Material activeMaterial;
+    public Material defaultMaterial;
+
     public void SetQuestionaire(Questionaire q)
     {
         this.q = q;
@@ -20,7 +24,17 @@ public class QOption : MonoBehaviour
     {
         if (other.CompareTag("selectable"))
         {
-            q.SetSelection(value);
+            q.SetSelection(value, gameObject, other.gameObject);
         }
+    }
+
+    public void SetActiveMaterial()
+    {
+        signal.sharedMaterial = activeMaterial;
+    }
+
+    public void SetDefaultMaterial()
+    {
+        signal.sharedMaterial = defaultMaterial;
     }
 }

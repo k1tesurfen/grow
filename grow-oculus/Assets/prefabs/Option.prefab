@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!64 &4986528337961396083
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807176189791569771}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300002, guid: 3b81b6aff2ef24d448f1fcf204232306, type: 3}
 --- !u!1 &5014695284137577911
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +136,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8261017222285590449}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.5585592, y: 0.2992105, z: 0.5585593}
@@ -143,6 +157,9 @@ MonoBehaviour:
   value: 0
   optionLabel: {fileID: 3543570184044579002}
   optionImage: {fileID: 8622999687812862640}
+  signal: {fileID: 3807176189793573293}
+  activeMaterial: {fileID: 2100000, guid: 7f806c281ec75fd4db4113d13c79fa7c, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 27eb693623b74ae409ad01480c04d7d2, type: 2}
 --- !u!1 &8806380336425420071
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +373,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: answer-bucket
       objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 3b81b6aff2ef24d448f1fcf204232306, type: 3}
+      propertyPath: m_TagString
+      value: bucket
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3b81b6aff2ef24d448f1fcf204232306, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -413,6 +434,18 @@ PrefabInstance:
 --- !u!4 &3807176189791804239 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 3b81b6aff2ef24d448f1fcf204232306,
+    type: 3}
+  m_PrefabInstance: {fileID: 3807176189791666639}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3807176189791569771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 3b81b6aff2ef24d448f1fcf204232306,
+    type: 3}
+  m_PrefabInstance: {fileID: 3807176189791666639}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3807176189793573293 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300002, guid: 3b81b6aff2ef24d448f1fcf204232306,
     type: 3}
   m_PrefabInstance: {fileID: 3807176189791666639}
   m_PrefabAsset: {fileID: 0}

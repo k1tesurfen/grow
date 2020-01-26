@@ -10,12 +10,18 @@ public class GameManager : MonoBehaviour
     public Target target;
     public CompetitionManager competition;
     public GameObject hand;
-
     public QuestionaireManager qm;
+    public FortressManager fm;
+    public ProjectileManager pm;
 
+    [Space(20)] // 10 pixels of spacing here.
+
+    //participantID 
     public string playerName;
 
-    public FortressManager fm;
+    //Count up for each participant.
+    public int playerNumber;
+
     //poisson disk spawning
     //public float radius = 1;
     //public Vector2 regionSize = new Vector2(15, 15);
@@ -27,19 +33,29 @@ public class GameManager : MonoBehaviour
         competition.StartGame();
         competition.UpdateLeaderBoard(25);
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            fm.HideFortress();
-            qm.StartNextQuestionaire();
-            qm.questionaireMode = true;
+            qm.StartQuestionnaireMode();
         }
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             competition.UpdateLeaderBoard(50);
         }
+        if (OVRInput.GetDown(OVRInput.Button.Two))
+        {
+            qm.StartQuestionnaireMode();
+        }
     }
+
+    public void InitiateExperiment()
+    {
+
+    }
+
+
 
     public string GetTimeStamp()
     {
