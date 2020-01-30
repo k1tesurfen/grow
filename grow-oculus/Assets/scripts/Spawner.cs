@@ -24,6 +24,7 @@ public class Spawner : MonoBehaviour
         if (other.gameObject.GetComponent<OVRGrabbable>() != null)
         {
             other.GetComponent<Rigidbody>().useGravity = true;
+            other.GetComponent<Snowball>().armed = true;
             Debug.Log("Checking if there is an empty sphere");
             SpawnSnowball();
         }
@@ -32,14 +33,14 @@ public class Spawner : MonoBehaviour
 
     public void SpawnSnowball()
     {
-        if (!Physics.CheckSphere(transform.position, 0.062f, LayerMask.GetMask("snowball")))
+        if (!Physics.CheckSphere(transform.position, 0.08f, LayerMask.GetMask("snowball")))
         {
-
             Debug.Log("spawning snowball");
             snowball = Instantiate(spawnObject, transform);
             snowball.GetComponent<Snowball>().gm = gm;
             if (spawnForQuestionnaire)
             {
+                snowball.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
                 snowball.tag = "selectable";
             }
 
@@ -47,6 +48,17 @@ public class Spawner : MonoBehaviour
         else
         {
             StartCoroutine(ExecuteAfterTime(1f));
+        }
+    }
+
+    public void ClearProjectiles()
+    {
+        foreach(Transform sb in transform)
+        {
+            if(sb.gameObject.GetComponent<Snowball>() != null)
+            {
+                Destroy(sb.gameObject);
+            }
         }
     }
 

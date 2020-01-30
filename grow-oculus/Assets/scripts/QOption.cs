@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class QOption : MonoBehaviour
@@ -20,11 +18,25 @@ public class QOption : MonoBehaviour
         this.q = q;
     }
 
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("selectable") && !q.answerLock)
+    //    {
+    //        q.answerLock = true;
+    //        Destroy(other.GetComponent<OVRGrabbable>());
+    //        q.SetSelection(value, gameObject, other.gameObject);
+    //    }
+    //}
+
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("selectable"))
+        if (other.CompareTag("selectable") && !q.answerLock)
         {
-            q.SetSelection(value, gameObject, other.gameObject);
+            if (!other.GetComponent<OVRGrabbable>().isGrabbed)
+            {
+                q.answerLock = true;
+                q.SetSelection(value, gameObject, other.gameObject);
+            }
         }
     }
 

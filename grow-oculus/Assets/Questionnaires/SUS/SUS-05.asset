@@ -15,16 +15,16 @@ MonoBehaviour:
   questionText: "Consider your memory of being in the virtual environment. How similar
     in termsof the structure of the memory is this to the structure of the memory
     of otherplaces you have been today? By \u2018structure of the memory\u2019 consider
-    things likethe extent to which you have a visual memory of the virtual environment,
-    whetherthat memory is in colour, the extent to which the memory seems vivid or
-    realistic,5its size, location in your imagination, the extent to which it is panoramic
-    in yourimagination, and other such structural elements."
+    things like the extent to which you have a visual memory of the virtual environment,
+    whether that memory is in colour, the extent to which the memory seems vivid or
+    realistic, its size, location in your imagination, the extent to which it is panoramic
+    in your imagination, and other such structural elements."
   answerOptionsLabels:
-  - Not at all
-  - 
-  - 
-  - 
-  - 
-  - 
-  - Very much so
+  - Not at all;1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - Very much so;7
   answerOptionsImages: []

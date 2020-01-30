@@ -12,6 +12,7 @@ public class QuestionaireManager : MonoBehaviour
 
     public TextMeshPro questionLabel;
     public GameObject spawnPlatform;
+    public GameObject undoButton;
 
     public bool questionnaireMode = false;
 
@@ -21,18 +22,25 @@ public class QuestionaireManager : MonoBehaviour
         gm.pm.ClearProjectiles();
         questionLabel.gameObject.SetActive(true);
         spawnPlatform.SetActive(true);
+        undoButton.SetActive(true);
         StartNextQuestionaire();
         questionnaireMode = true;
+    }
+
+    public void RedoRecentQuestion()
+    {
+        questionaires[questionaireToDo-1].RedoLastQuestion();
     }
 
     public void StartNextQuestionaire()
     {
         if(questionaireToDo == questionaires.Length)
         {
-            //abort questionaire mode and continue with cool conditions and stuff
+            //abort questionaire mode and continue with conditions and stuff
             gm.fm.ShowFortress();
             questionLabel.gameObject.SetActive(false);
             spawnPlatform.SetActive(false);
+            undoButton.SetActive(false);
             questionnaireMode = false;
             return;
         }

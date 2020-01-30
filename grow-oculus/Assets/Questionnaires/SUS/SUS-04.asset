@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: SUS-04
   m_EditorClassIdentifier: 
   questionText: During the time of the experience, which was the strongest on the
-    whole, yoursense of being in the virtual environment or of being elsewhere?
+    whole, your sense of being in the virtual environment or of being elsewhere?
   answerOptionsLabels:
-  - Being elsewhere
-  - 
-  - 
-  - 
-  - 
-  - 
-  - Being in the Virtual Environment
+  - Being elsewhere;1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - Being in the Virtual Environment;7
   answerOptionsImages: []

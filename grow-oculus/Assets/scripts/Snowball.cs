@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Snowball : MonoBehaviour
 {
@@ -9,49 +7,66 @@ public class Snowball : MonoBehaviour
 
     private SphereCollider groundCollider;
 
-    void OnEnable()
-    {
-        //groundCollider = gameObject.AddComponent<SphereCollider>();
-        //groundCollider.radius = 0.062f;
-        //groundCollider.isTrigger = false;
-    }
+    //after snowball is grabbed it gets armed to watch for collisions
+    public bool armed;
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void Enable()
     {
         groundCollider = gameObject.AddComponent<SphereCollider>();
-        groundCollider.radius = 0.07f;
+        groundCollider.radius = 0.062f;
         groundCollider.isTrigger = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    ////detects if snowball hits anything, creates impact and destroys snowball gameobject
+    //private void OnTriggerEnter(Collider col)
+    //{
+    //    Debug.Log("I'm a snowball and colliding with : " + col.gameObject.name);
+    //    Debug.Log("Do I have the correct layer? " + col.transform.gameObject.layer);
+    //    if (!gameObject.GetComponent<OVRGrabbable>().isGrabbed && armed && col.transform.gameObject.layer == 10)
+    //    {
+    //        Debug.Log("And I'm even not grabbed.");
+    //        //if the hit object is target, register the hit
+    //        if (col.gameObject.name
+    //            == "Target")
+    //        {
+    //            gm.target.RegisterHit(transform.position);
+    //        }
+
+    //        //log throw properties
+    //        //gm.logger.Log(col.collider.transform.gameObject.name);
+
+    //        //snowball destroy sequence
+    //        gm.scatter.Explode(transform.position);
+    //        Destroy(gameObject);
+    //    }
+    //}
+
+    public void DestroySnowball()
     {
-        if (GetComponent<OVRGrabbable>().isGrabbed)
-        {
-            Destroy(groundCollider);
-        }
+        Destroy(gameObject);
     }
 
     //detects if snowball hits anything, creates impact and destroys snowball gameobject
     private void OnCollisionEnter(Collision col)
     {
-        if (false)
+        if (gameObject.GetComponent<OVRGrabbable>() != null)
         {
-            //if the hit object is target, register the hit
-            if (col.collider.transform.gameObject.name
-                == "Target")
+            if (!gameObject.GetComponent<OVRGrabbable>().isGrabbed && armed && col.collider.gameObject.layer == 10)
             {
-                gm.target.RegisterHit(col.GetContact(0).point);
+                //if the hit object is target, register the hit
+                if (col.collider.transform.gameObject.name
+                    == "Target")
+                {
+                    gm.target.RegisterHit(col.GetContact(0).point);
+                }
+
+                //log throw properties
+                //gm.logger.Log(col.collider.transform.gameObject.name);
+
+                //snowball destroy sequence
+                gm.scatter.Explode(col.GetContact(0).point);
+                DestroySnowball();
             }
-
-            //log throw properties
-            //gm.logger.Log(col.collider.transform.gameObject.name);
-
-            //snowball destroy sequence
-            gm.scatter.Explode(col.GetContact(0).point);
-            Destroy(gameObject);
         }
     }
 }

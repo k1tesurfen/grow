@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4376317969894907904}
   - component: {fileID: 4376317969894907911}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: fence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4805968172316465112}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Component_23_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4806211629025806566}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: prefab fence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 4806425574724989890}
   - component: {fileID: 4812289831756866132}
   - component: {fileID: 4823310939403969982}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mesh39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4804323632580922774}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Component_24_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 4804477976264704114}
   - component: {fileID: 4812871185724858706}
   - component: {fileID: 4823122764511158464}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mesh36
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 4806341063447802534}
   - component: {fileID: 4813115498233571798}
   - component: {fileID: 4823215002573871404}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mesh38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 4804636630394103796}
   - component: {fileID: 4812315158780630840}
   - component: {fileID: 4822993561561648796}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mesh37
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,7 +458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4806379530883871514}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Component_24_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -489,7 +489,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4805940017607694858}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Component_23_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

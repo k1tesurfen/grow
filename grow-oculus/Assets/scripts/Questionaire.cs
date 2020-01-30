@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class Questionaire : MonoBehaviour
 {
@@ -16,21 +14,21 @@ public class Questionaire : MonoBehaviour
 
     public QOption qOption;
 
-    public float gapAngle = 20f;
+    public float gapWidth;
 
     public int currentQuestion;
     public QOption[] currentQuestionOptions;
-    
+
     public int selection;
-    private GameObject activeBucket;
-    private GameObject activeSnowball;
+
+    public bool answerLock;
 
     public void InitQuestionaire()
     {
         //for each question, there has to be one answer
         answers = new int[questions.Length];
         currentQuestion = 0;
-        AskQuestion(currentQuestion); 
+        AskQuestion(currentQuestion);
     }
 
     public void AskQuestion(int n)
@@ -43,22 +41,21 @@ public class Questionaire : MonoBehaviour
         qm.questionLabel.text = q.questionText;
         currentQuestionOptions = new QOption[q.answerOptionsLabels.Length];
 
-        //answer buckets get distributed on the hemisphere in front of the player
-        float startAngle = ((q.answerOptionsLabels.Length - 1f) / 2f) * -gapAngle;
 
-        for(int i=0; i<q.answerOptionsLabels.Length; i++)
+        float startPos = ((q.answerOptionsLabels.Length - 1f) / 2f) * -gapWidth;
+
+        for (int i = 0; i < q.answerOptionsLabels.Length; i++)
         {
             QOption option = Instantiate(qOption, optionHolder.transform);
-            option.optionLabel.text = q.answerOptionsLabels[i];
+            option.optionLabel.text = q.answerOptionsLabels[i].Replace(";", "\n");
             option.value = i;
             option.SetQuestionaire(this);
-            if(q.answerOptionsImages.Length > 0)
+            if (q.answerOptionsImages.Length > 0)
             {
                 option.optionImage.sprite = q.answerOptionsImages[i];
             }
-            Quaternion rotation = Quaternion.Euler(new Vector3(0f, startAngle + i * gapAngle, 0f));
-            option.transform.rotation = rotation;
-            option.transform.position = (rotation * (0.6f * Vector3.forward)) + 1.1f * Vector3.up;
+            Vector3 position = new Vector3((startPos + (i * gapWidth)), 1.2f, 0.6f);
+            option.transform.position = position;
         }
     }
 
@@ -67,39 +64,35 @@ public class Questionaire : MonoBehaviour
     {
         selection = value;
 
-        //remove all current selectionindicators
-        if(this.activeBucket != null)
-        {
-            this.activeBucket.GetComponent<QOption>().SetDefaultMaterial();
-        }
-        if (this.activeSnowball)
-        {
-            Destroy(this.activeSnowball);
-        }
-
         //set selectionindicator
         activeBucket.GetComponent<QOption>().SetActiveMaterial();
 
-        Destroy(activeSnowball.GetComponent<OVRGrabbable>());
+        StartCoroutine(JanDelay(0.8f, activeBucket, activeSnowball));
+    }
 
-        //save current selectionindicators
-        this.activeSnowball = activeSnowball;
-        this.activeBucket = activeBucket;
+    IEnumerator JanDelay(float time, GameObject activeBucket, GameObject activeSnowball)
+    {
+        yield return new WaitForSeconds(time);
+        SetAnswer(selection, activeBucket, activeSnowball);
     }
 
     //the current selection is saved as answer of the question
     //the currentQuestion is raised.
-    public void SetAnswer()
+    public void SetAnswer(int value, GameObject activeBucket, GameObject activeSnowball)
     {
-        answers[currentQuestion] = selection;
+        //remove/destroy indicators
+        activeSnowball.GetComponent<Snowball>().DestroySnowball();
+
+        answers[currentQuestion] = value;
 
         currentQuestion++;
+        answerLock = false;
 
-        if(transform.Find("options") != null)
+        if (transform.Find("options") != null)
         {
             Destroy(transform.Find("options").gameObject);
         }
-        if(currentQuestion >= questions.Length)
+        if (currentQuestion >= questions.Length)
         {
             //all questions for this questionaire have been answered.
             //save questionaire to file
@@ -110,6 +103,23 @@ public class Questionaire : MonoBehaviour
             //gameObject.SetActive(false);
         }
         else
+        {
+            AskQuestion(currentQuestion);
+        }
+    }
+
+    public void RedoLastQuestion()
+    {
+        if (transform.Find("options") != null)
+        {
+            Destroy(transform.Find("options").gameObject);
+        }
+        if (currentQuestion > 0)
+        {
+            currentQuestion--;
+            AskQuestion(currentQuestion);
+        }
+        else if(currentQuestion == 0)
         {
             AskQuestion(currentQuestion);
         }

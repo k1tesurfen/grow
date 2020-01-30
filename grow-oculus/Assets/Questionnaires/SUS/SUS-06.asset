@@ -15,11 +15,11 @@ MonoBehaviour:
   questionText: During the time of your experience, did you often think to yourself
     that you wereactually in the virtual environment?
   answerOptionsLabels:
-  - Not very often
-  - 
-  - 
-  - 
-  - 
-  - 
-  - Very much so
+  - Not very often;1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - Very much so;7
   answerOptionsImages: []
