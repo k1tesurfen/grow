@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     //Count up for each participant.
     public int playerNumber;
+    public bool rightHanded;
 
     //poisson disk spawning
     //public float radius = 1;
@@ -30,8 +31,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        competition.StartGame();
-        competition.UpdateLeaderBoard(25);
+        //competition.StartGame();
+        //competition.UpdateLeaderBoard(25);
+        InitiateExperiment();
     }
 
     private void Update()
@@ -52,9 +54,23 @@ public class GameManager : MonoBehaviour
 
     public void InitiateExperiment()
     {
-
+        //set handedness, 
+         
     }
+    
+    //sets the playarea to fit the handedness of a player
+    public void SetHandedness()
+    {
+        if (rightHanded)
+        {
+            
 
+        }
+        else
+        {
+
+        }
+    }
 
 
     public string GetTimeStamp()
