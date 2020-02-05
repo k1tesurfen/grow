@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class ExplorationManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameManager gm;
+
+    //Points the player made druing condition
+    public int points;
+
+    public void BeginExploration()
     {
-        
+        points = 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void EndExploration()
     {
-        
+        gm.qm.StartQuestionnaireMode(); 
+    }
+
+    //Adds points the player made
+    private void AddPoints(int points)
+    {
+        this.points += points;
     }
 }

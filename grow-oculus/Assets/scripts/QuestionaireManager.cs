@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 
 public class QuestionaireManager : MonoBehaviour
 {
@@ -16,6 +14,7 @@ public class QuestionaireManager : MonoBehaviour
 
     public bool questionnaireMode = false;
 
+    //prepare everything for the first questionnaire and start it.
     public void StartQuestionnaireMode()
     {
         gm.fm.HideFortress();
@@ -27,25 +26,37 @@ public class QuestionaireManager : MonoBehaviour
         questionnaireMode = true;
     }
 
+
+    //abort questionaire mode and continue with conditions and stuff
+    public void EndQuestionnaireMode()
+    {
+        gm.fm.ShowFortress();
+        questionLabel.gameObject.SetActive(false);
+        spawnPlatform.SetActive(false);
+        undoButton.SetActive(false);
+        questionnaireMode = false;
+        gm.NextCondition();
+    }
+
     public void RedoRecentQuestion()
     {
-        questionaires[questionaireToDo-1].RedoLastQuestion();
+        questionaires[questionaireToDo - 1].RedoLastQuestion();
     }
 
     public void StartNextQuestionaire()
     {
-        if(questionaireToDo == questionaires.Length)
+        if (questionaireToDo == questionaires.Length)
         {
-            //abort questionaire mode and continue with conditions and stuff
-            gm.fm.ShowFortress();
-            questionLabel.gameObject.SetActive(false);
-            spawnPlatform.SetActive(false);
-            undoButton.SetActive(false);
-            questionnaireMode = false;
+            EndQuestionnaireMode();
             return;
         }
 
         questionaires[questionaireToDo].InitQuestionaire();
         questionaireToDo++;
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(transform.position, new Vector3(0.1f, 0.1f, 0.1f)); 
     }
 }

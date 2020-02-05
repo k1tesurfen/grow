@@ -11,11 +11,7 @@ public class FortressManager : MonoBehaviour
 
     private void Start()
     {
-        anim.Play("idle",0, 0f); 
-    }
-
-    private void Update()
-    {
+        anim.Play("idle", 0, 0f);
     }
 
     public void HideFortress()

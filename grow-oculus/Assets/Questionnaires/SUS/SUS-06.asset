@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SUS-06
   m_EditorClassIdentifier: 
   questionText: During the time of your experience, did you often think to yourself
-    that you wereactually in the virtual environment?
+    that you were actually in the virtual environment?
   answerOptionsLabels:
   - Not very often;1
   - 2

@@ -19,12 +19,13 @@ public class CompetitionManager : MonoBehaviour
     public TextMeshPro timerLabel;
     public string[] competitorNames;
 
+    //Adds points the player made
     private void AddPoints(int points)
     {
         this.points += points;
     }
 
-    public void StartGame()
+    public void StartCompetition()
     {
         points = 0;
         leaderBoardLabel.gameObject.SetActive(true);
@@ -37,12 +38,16 @@ public class CompetitionManager : MonoBehaviour
         StartCoroutine("Countdown", countdown);
     }
 
-    public void EndGame()
+    public void EndCompetition()
     {
-        //log final points;
+        gm.points = points; 
+        
+        points = 0;
 
         leaderBoardLabel.gameObject.SetActive(false);
         timerLabel.gameObject.SetActive(false);
+        
+        gm.qm.StartQuestionnaireMode();
     }
 
     public void UpdateLeaderBoard(int points)
@@ -109,7 +114,7 @@ public class CompetitionManager : MonoBehaviour
             UpdateTimerLabel(time--);
             yield return new WaitForSeconds(1);
         }
-        EndGame();
+        EndCompetition();
     }
 
     //takes the remaining time in seconds and converts it to minutes 

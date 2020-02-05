@@ -35,6 +35,7 @@ public class Questionaire : MonoBehaviour
     {
         optionHolder = new GameObject("options");
         optionHolder.transform.parent = transform;
+        optionHolder.transform.localPosition = Vector3.zero;
 
         Question q = questions[n];
 
@@ -54,8 +55,8 @@ public class Questionaire : MonoBehaviour
             {
                 option.optionImage.sprite = q.answerOptionsImages[i];
             }
-            Vector3 position = new Vector3((startPos + (i * gapWidth)), 1.2f, 0.6f);
-            option.transform.position = position;
+            Vector3 position = new Vector3((startPos + (i * gapWidth)), 0f, 0f);
+            option.transform.localPosition = position;
         }
     }
 
@@ -70,6 +71,7 @@ public class Questionaire : MonoBehaviour
         StartCoroutine(JanDelay(0.8f, activeBucket, activeSnowball));
     }
 
+    //adds a delay for the answer to get finally accepted.
     IEnumerator JanDelay(float time, GameObject activeBucket, GameObject activeSnowball)
     {
         yield return new WaitForSeconds(time);
@@ -100,7 +102,6 @@ public class Questionaire : MonoBehaviour
             qm.questionLabel.text = "";
             SaveQuestionaire(answers);
             qm.StartNextQuestionaire();
-            //gameObject.SetActive(false);
         }
         else
         {
@@ -108,6 +109,7 @@ public class Questionaire : MonoBehaviour
         }
     }
 
+    //removes options of current question and asks the previous question, if there is one.
     public void RedoLastQuestion()
     {
         if (transform.Find("options") != null)
@@ -124,9 +126,11 @@ public class Questionaire : MonoBehaviour
             AskQuestion(currentQuestion);
         }
     }
-
+    
+    //save all answers to this questtionnaire
     public void SaveQuestionaire(int[] answers)
     {
-        Debug.Log("saving the questionaire");
+        qm.gm.answers.AddRange(answers);  
     }
+
 }

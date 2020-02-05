@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public QuestionaireManager qm;
     public FortressManager fm;
     public ProjectileManager pm;
+    public UndoButton undoButton;
+
 
     [Space(20)] // 10 pixels of spacing here.
 
@@ -22,6 +24,18 @@ public class GameManager : MonoBehaviour
     //Count up for each participant.
     public int playerNumber;
     public bool rightHanded;
+
+    [HideInInspector]
+    public Scenario currentScenario = Scenario.competitive;
+    [HideInInspector]
+    public InteractionMethod currentInteractionMethod = InteractionMethod.normal;
+
+    //all information gathered for logging
+    [HideInInspector]
+    public int points;
+    public float accuracy;
+
+    public List<int> answers;
 
     //poisson disk spawning
     //public float radius = 1;
@@ -40,6 +54,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            competition.EndCompetition();
             qm.StartQuestionnaireMode();
         }
         if (Input.GetKeyDown(KeyCode.Backspace))
@@ -55,21 +70,32 @@ public class GameManager : MonoBehaviour
     public void InitiateExperiment()
     {
         //set handedness, 
-         
+        SetHandedness();
+        competition.StartCompetition();
     }
-    
+
+    public void NextCondition()
+    {
+        LogCondition();
+        
+        //@TODO: prepare next condition and start it
+    }
+
+    //log data from current condition
+    public void LogCondition()
+    {
+        string questionnaireAnswers = string.Join(";", answers);
+        logger.Log(GetTimeStamp() + ";" + playerName + ";" + currentScenario + ";" + currentInteractionMethod + ";"
+                         + points + ";" + questionnaireAnswers);
+    }
+
     //sets the playarea to fit the handedness of a player
     public void SetHandedness()
     {
-        if (rightHanded)
-        {
-            
-
-        }
-        else
-        {
-
-        }
+        //set the position of the undo button. 
+        //for a righthanded player the button has to be on the left side to avoid accidental activation.
+        undoButton.SetPosition(rightHanded);
+        undoButton.SetRotation(rightHanded);
     }
 
 
@@ -79,3 +105,17 @@ public class GameManager : MonoBehaviour
     }
 
 }
+
+public enum InteractionMethod
+{
+    normal = 0,
+    enhanced = 1,
+    magical = 2
+};
+
+public enum Scenario
+{
+    competitive = 0,
+    exploratory = 1
+};
+

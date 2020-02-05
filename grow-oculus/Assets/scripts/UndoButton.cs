@@ -5,11 +5,11 @@ public class UndoButton : MonoBehaviour
 {
     public QuestionaireManager qm;
 
-    public Vector3 positionLeft = new Vector3 (-0.977f, -1.25f, 0.035f);
-    public Vector3 rotationLeft = new Vector3(0f, 45f, 0f);
+    public Vector3 positionLeft = new Vector3(-0.88f, -1.28f, -0.19f);
+    public Vector3 rotationLeft = new Vector3(0f, 30f, 0f);
 
-    public Vector3 positionRight = new Vector3 (0.977f, -1.25f, 0.035f);
-    public Vector3 rotationRight =  new Vector3(0f, -45f, 0f);
+    public Vector3 positionRight = new Vector3(0.88f, -1.28f, 0.19f);
+    public Vector3 rotationRight = new Vector3(0f, 120f, 0f);
 
     private bool bulpOn = false;
 
@@ -56,11 +56,11 @@ public class UndoButton : MonoBehaviour
     {
         if (rightHanded)
         {
-            transform.parent.position = positionLeft;
+            transform.parent.localPosition = positionLeft;
         }
         else
         {
-            transform.parent.position = positionRight;
+            transform.parent.localPosition = positionRight;
         }
     }
 
@@ -68,11 +68,11 @@ public class UndoButton : MonoBehaviour
     {
         if (rightHanded)
         {
-            transform.parent.rotation = Quaternion.Euler(rotationLeft);
+            transform.parent.localRotation = Quaternion.Euler(rotationLeft);
         }
         else
         {
-            transform.parent.rotation = Quaternion.Euler(rotationRight);
+            transform.parent.localRotation = Quaternion.Euler(rotationRight);
         }
     }
 }
