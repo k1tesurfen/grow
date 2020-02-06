@@ -17,4 +17,12 @@ public class ProjectileManager : MonoBehaviour
         }
     }
 
+    public void Repopulate()
+    {
+        foreach(Spawner sp in spawners)
+        {
+            sp.ForceSpawnSnowball();
+        }
+    }
+
 }

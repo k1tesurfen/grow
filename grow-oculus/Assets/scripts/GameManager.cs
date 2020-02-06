@@ -8,34 +8,55 @@ public class GameManager : MonoBehaviour
     public Logger logger;
     public Scatter scatter;
     public Target target;
-    public CompetitionManager competition;
+    public LatinSquare latinSquare;
+    public CompetitionManager competitionManager;
+    public ExplorationManager explorationManager;
     public GameObject hand;
     public QuestionaireManager qm;
     public FortressManager fm;
     public ProjectileManager pm;
     public UndoButton undoButton;
+    public GameObject blackHole;
 
 
-    [Space(20)] // 10 pixels of spacing here.
 
     //participantID 
+    [Space(20)]
     public string playerName;
 
     //Count up for each participant.
     public int playerNumber;
     public bool rightHanded;
 
+    public bool storyTime;
+
+    public int interactionLS;
+    public int scenarioLS;
+
+    private bool firstCondition = true;
+
     [HideInInspector]
-    public Scenario currentScenario = Scenario.competitive;
+    public Scenario currentScenario;
     [HideInInspector]
-    public InteractionMethod currentInteractionMethod = InteractionMethod.normal;
+    public InteractionMethod currentInteractionMethod;
+
+    public int timeInScenario = 120;
 
     //all information gathered for logging
     [HideInInspector]
     public int points;
+    [HideInInspector]
     public float accuracy;
 
+    [HideInInspector]
     public List<int> answers;
+
+
+    [Space(30)]
+    public string currentGroup;
+
+    [Space(10)]
+    public string currentCondition;
 
     //poisson disk spawning
     //public float radius = 1;
@@ -52,18 +73,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (OVRInput.GetDown(OVRInput.Button.One))
         {
-            competition.EndCompetition();
-            qm.StartQuestionnaireMode();
-        }
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            competition.UpdateLeaderBoard(50);
-        }
-        if (OVRInput.GetDown(OVRInput.Button.Two))
-        {
-            qm.StartQuestionnaireMode();
+            blackHole.SetActive(true);
         }
     }
 
@@ -71,14 +83,38 @@ public class GameManager : MonoBehaviour
     {
         //set handedness, 
         SetHandedness();
-        competition.StartCompetition();
+        NextCondition();
     }
 
     public void NextCondition()
     {
-        LogCondition();
-        
-        //@TODO: prepare next condition and start it
+        Debug.Log("starting next scenario");
+
+        if (!firstCondition)
+        {
+            //Log the previous conditions data.
+            LogCondition();
+        }
+        else
+        {
+            firstCondition = false;
+        }
+
+        currentScenario = latinSquare.GetScenario();
+        currentInteractionMethod = latinSquare.GetInteractionMethod();
+
+        Debug.Log("current scenario is: " + currentScenario + ". with the interaction method: " + currentInteractionMethod);
+
+        if(currentScenario == Scenario.competitive)
+        {
+            //start competetive scenario
+            competitionManager.StartCompetition(currentInteractionMethod);
+        }
+        else
+        {
+            //start exploratory scenario
+            explorationManager.StartExploration(currentInteractionMethod);
+        }
     }
 
     //log data from current condition
@@ -87,6 +123,7 @@ public class GameManager : MonoBehaviour
         string questionnaireAnswers = string.Join(";", answers);
         logger.Log(GetTimeStamp() + ";" + playerName + ";" + currentScenario + ";" + currentInteractionMethod + ";"
                          + points + ";" + questionnaireAnswers);
+        answers.Clear();
     }
 
     //sets the playarea to fit the handedness of a player
@@ -115,7 +152,7 @@ public enum InteractionMethod
 
 public enum Scenario
 {
-    competitive = 0,
-    exploratory = 1
+    exploratory = 0,
+    competitive = 1
 };
 

@@ -52,8 +52,11 @@ public class Snowball : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //this condition only occurs when a snowball is thrown
         if (armed && !grabbable.isGrabbed)
         {
+            //@TODO: if unreal condition, set Attractor.doAttract to true
+
             if (GetComponent<Rigidbody>().velocity.sqrMagnitude > maxSpeed)
             {
                 maxSpeed = GetComponent<Rigidbody>().velocity.sqrMagnitude;

@@ -12,13 +12,17 @@ public class Attractor : MonoBehaviour
     //should the obToAttract be attracted or not
     public bool doAttract = false;
     private float lifeSpan = 500f;
-    public float attractionRadius = 10f;
+
+    [Range(0f, 15f)]
+    public float attractionRadius;
+
+    public GameObject particles = null;
 
     void FixedUpdate()
     {
         foreach (Attractor at in Attractables)
         {
-            if (at != this && isAttractor && at.doAttract)
+            if (at != this && isAttractor && doAttract && at.doAttract)
             {
                 Attract(at);
             }
@@ -30,7 +34,7 @@ public class Attractor : MonoBehaviour
         if (isAttractor)
         {
             if (lifeSpan < 0f)
-                Destroy(gameObject);
+                gameObject.SetActive(false);
 
             lifeSpan -= Time.deltaTime;
         }
@@ -42,11 +46,19 @@ public class Attractor : MonoBehaviour
             Attractables = new List<Attractor>();
 
         Attractables.Add(this);
+        if (isAttractor)
+        {
+            particles.SetActive(true);
+        }
     }
 
     void OnDisable()
     {
         Attractables.Remove(this);
+        if (isAttractor && particles != null)
+        {
+            particles.SetActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -81,5 +93,10 @@ public class Attractor : MonoBehaviour
             objToAttract.GetComponent<Rigidbody>().AddForce(force);
         }
 
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, attractionRadius);
     }
 }

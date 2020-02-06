@@ -11,7 +11,6 @@ public class CompetitionManager : MonoBehaviour
     //collected points of the player.
     public int points;
 
-    public int countdown;
     public Color warningColor;
 
     public List<Competitor> competitors = new List<Competitor>();
@@ -25,7 +24,7 @@ public class CompetitionManager : MonoBehaviour
         this.points += points;
     }
 
-    public void StartCompetition()
+    public void StartCompetition(InteractionMethod im)
     {
         points = 0;
         leaderBoardLabel.gameObject.SetActive(true);
@@ -35,7 +34,9 @@ public class CompetitionManager : MonoBehaviour
             competitors.Add(new Competitor(compName));
         }
         competitors.Add(new Competitor(gm.playerName));
-        StartCoroutine("Countdown", countdown);
+        gm.pm.Repopulate();
+        gm.target.gameObject.SetActive(true);
+        StartCoroutine("Countdown", gm.timeInScenario);
     }
 
     public void EndCompetition()
@@ -46,6 +47,9 @@ public class CompetitionManager : MonoBehaviour
 
         leaderBoardLabel.gameObject.SetActive(false);
         timerLabel.gameObject.SetActive(false);
+
+        gm.pm.ClearProjectiles();
+        gm.target.gameObject.SetActive(false);
         
         gm.qm.StartQuestionnaireMode();
     }
@@ -71,12 +75,12 @@ public class CompetitionManager : MonoBehaviour
         {
             if (c.name != gm.playerName)
             {
-                StartCoroutine(DelayScoreUpdate(c.name));
+                StartCoroutine(JanDelayScoreUpdate(c.name));
             }
         }
     }
 
-    private IEnumerator DelayScoreUpdate(string i)
+    private IEnumerator JanDelayScoreUpdate(string i)
     {
         yield return new WaitForSeconds(Random.Range(2f, 5f));
         var competitor = competitors.Find(n => n.name == i);
@@ -101,7 +105,7 @@ public class CompetitionManager : MonoBehaviour
             leaderBoardLabel.text += "\n" + comp.name + "\t" + comp.score;
         }
     }
-
+    
     //coroutine to countdown the remaining seconds
     private IEnumerator Countdown(int time)
     {
