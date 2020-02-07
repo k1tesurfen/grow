@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
+using TMPro;
 
 public class Questionaire : MonoBehaviour
 {
     public QuestionaireManager qm;
+    public TextMeshPro questionLabel;
     public string ID;
     //A questionaire holds many questions. A Question is a scriptable object,
     //that holds the requires question text and the answer options.
@@ -27,8 +29,9 @@ public class Questionaire : MonoBehaviour
     public void InitQuestionaire()
     {
         //for each question, there has to be one answer
-        answers = new int[questions.Length];
+        answers = new int[questions.Length-1];
         currentQuestion = 0;
+        questionLabel.gameObject.SetActive(true);
         AskQuestion(currentQuestion);
     }
 
@@ -40,7 +43,7 @@ public class Questionaire : MonoBehaviour
 
         Question q = questions[n];
 
-        qm.questionLabel.text = q.questionText;
+        questionLabel.text = q.questionText;
         currentQuestionOptions = new QOption[q.answerOptionsLabels.Length];
 
 
@@ -50,7 +53,7 @@ public class Questionaire : MonoBehaviour
         {
             QOption option = Instantiate(qOption, optionHolder.transform);
             option.optionLabel.text = q.answerOptionsLabels[i].Replace(";", "\n");
-            option.value = i;
+            option.value = i+1;
             option.SetQuestionaire(this);
             if (q.answerOptionsImages.Length > 0)
             {
@@ -86,13 +89,13 @@ public class Questionaire : MonoBehaviour
         try
         {
             //remove/destroy indicators
-            activeSnowball.GetComponent<Snowball>().DestroySnowball();
+            activeSnowball.gameObject.SetActive(false);
         }
         catch
         {
 
         }
-        if(currentQuestion < questions.Length - 1)
+        if(currentQuestion < (questions.Length-1))
         {
             answers[currentQuestion] = value;
         }
@@ -109,7 +112,8 @@ public class Questionaire : MonoBehaviour
             //all questions for this questionaire have been answered.
             //save questionaire to file
 
-            qm.questionLabel.text = "";
+            questionLabel.text = "";
+            questionLabel.gameObject.SetActive(false);
             SaveQuestionaire(answers);
             qm.StartNextQuestionaire();
         }
@@ -125,7 +129,7 @@ public class Questionaire : MonoBehaviour
         {
             Destroy(transform.Find("options").gameObject);
         }
-        qm.questionLabel.text = "";
+        questionLabel.text = "";
     }
 
     //removes options of current question and asks the previous question, if there is one.

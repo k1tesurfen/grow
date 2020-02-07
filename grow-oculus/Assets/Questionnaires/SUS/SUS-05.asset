@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questionText: "Consider your memory of being in the virtual environment. How similar
     in terms of the structure of the memory is this to the structure of the memory
-    of otherplaces you have been today? By \u2018structure of the memory\u2019 consider
-    things like the extent to which you have a visual memory of the virtual environment,
-    whether that memory is in colour, the extent to which the memory seems vivid or
-    realistic, its size, location in your imagination, the extent to which it is panoramic
-    in your imagination, and other such structural elements."
+    of other places you have been today? \n\nBy \u2018structure of the memory\u2019
+    consider things like the extent to which you have a visual memory of the virtual
+    environment, whether that memory is in colour, the extent to which the memory
+    seems vivid or realistic, its size, location in your imagination, the extent to
+    which it is panoramic in your imagination, and other such structural elements."
   answerOptionsLabels:
   - Not at all;1
   - 2

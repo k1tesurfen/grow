@@ -4,9 +4,10 @@ public class Snowball : MonoBehaviour
 {
     [Header("References:")]
     public GameManager gm;
+    public Attractor attractor;
 
     public Logger snowballLogger;
-    public bool spawnForQuestionnaire;
+    public bool spawnForQuestionnaire = false;
 
     private SphereCollider groundCollider;
 
@@ -56,12 +57,25 @@ public class Snowball : MonoBehaviour
         if (armed && !grabbable.isGrabbed)
         {
             //@TODO: if unreal condition, set Attractor.doAttract to true
+            //set the blackhole to GO!
+            if (gm.currentInteractionMethod == InteractionMethod.magical)
+            {
+                if (!attractor.doAttract)
+                {
+                    attractor.doAttract = true;
+                }
+            }
 
             if (GetComponent<Rigidbody>().velocity.sqrMagnitude > maxSpeed)
             {
                 maxSpeed = GetComponent<Rigidbody>().velocity.sqrMagnitude;
             }
         }
+    }
+
+    public void HideSnowball()
+    {
+        gameObject.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void DestroySnowball()
@@ -76,38 +90,58 @@ public class Snowball : MonoBehaviour
         {
             if (!grabbable.isGrabbed && armed && col.collider.gameObject.layer == 10)
             {
-                //if the hit object is target, register the hit
-                if (col.collider.transform.gameObject.name
-                    == "Target")
+                if (!spawnForQuestionnaire)
                 {
-                    gm.target.RegisterHit(col.GetContact(0).point);
-                    float deviation = (gm.target.center.transform.position - col.GetContact(0).point).magnitude;
-                    gm.accuracy += deviation;
-                    if (deviation < 0.675f)
+                    //if the hit object is target, register the hit
+                    if (col.collider.transform.gameObject.name
+                        == "Target")
                     {
-                        gm.points += 100;
-                    }
-                    else if (deviation < 1.867f)
-                    {
-                        gm.points += 75;
-                    }
-                    else if(deviation < 3.029f)
-                    {
-                        gm.points += 50;
-                    }
-                    else if(deviation < 4f)
-                    {
-                        gm.points += 25;
-                    }
-                    else
-                    {
-                        gm.points += 0;
-                    }
-                }
+                        gm.target.RegisterHit(col.GetContact(0).point);
+                        float deviation = (gm.target.center.transform.position - col.GetContact(0).point).magnitude;
+                        gm.accuracy += deviation;
+                        gm.snowballsOnTarget++;
+                        if (deviation < 0.675f)
+                        {
+                            Debug.Log("=================100p");
+                            gm.points += 100;
+                        }
+                        else if (deviation < 1.867f)
+                        {
+                            gm.points += 75;
+                            Debug.Log("=================75p");
+                        }
+                        else if (deviation < 3.029f)
+                        {
+                            gm.points += 50;
+                            Debug.Log("=================50p");
+                        }
+                        else if (deviation < 4f)
+                        {
+                            Debug.Log("=================25p");
+                            gm.points += 25;
+                        }
+                        else
+                        {
+                            Debug.Log("=================0p");
+                            gm.points += 0;
+                        }
+                        gm.competitionManager.UpdateLeaderBoard();
 
-                //log throw properties
-                //gm.logger.Log(col.collider.transform.gameObject.name);
-                snowballLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed));
+                        //kill the blackhole if it is the right circumstance
+                        if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
+                        {
+                            gm.blackHole.GetComponent<Attractor>().doAttract =  false;
+                            gm.blackHole.GetComponent<Attractor>().StopVisuals();
+                            gm.blackHole.transform.position = new Vector3(0f, -10f, 0f);
+                            gm.leftHand.GetComponent<Pointer>().blackHoleIsSet = false;
+                            gm.rightHand.GetComponent<Pointer>().blackHoleIsSet = false;
+                        }
+                    }
+                    gm.thrownSnowballs++;
+                    //log throw properties
+                    //gm.logger.Log(col.collider.transform.gameObject.name);
+                    snowballLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed));
+                }
 
                 //snowball destroy sequence
                 gm.scatter.Explode(col.GetContact(0).point);

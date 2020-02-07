@@ -42,8 +42,6 @@ public class Spawner : MonoBehaviour
     {
         if (!Physics.CheckSphere(transform.position, 0.08f, LayerMask.GetMask("snowball")))
         {
-            Debug.Log("spawning snowball");
-
             snowball = Instantiate(spawnObject, transform);
             snowball.GetComponent<Snowball>().gm = gm;
             snowball.GetComponent<Snowball>().snowballLogger = snowballLogger;
@@ -58,7 +56,7 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            StartCoroutine(JanDelay(1f));
+            StartCoroutine(JanDelay(1.5f));
         }
     }
 
@@ -71,18 +69,36 @@ public class Spawner : MonoBehaviour
             snowball.GetComponent<Snowball>().gm = gm;
             snowball.GetComponent<Snowball>().snowballLogger = snowballLogger;
             snowball.GetComponent<Snowball>().grabbable = snowball.GetComponent<OVRGrabbable>();
+
+            if (spawnForQuestionnaire)
+            {
+                snowball.GetComponent<Snowball>().spawnForQuestionnaire = true;
+                snowball.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+                snowball.tag = "selectable";
+            }
         }
     }
 
-    //destroy all snowballs, this spawner has produced. it should be only one snowball.
-    //this is the countermove to ForceSpawnObjects()
+    //hide all snowballs, this spawner has produced. it should be only one snowball.
+    public void HideSnowballs()
+    {
+        foreach (Transform sb in transform)
+        {
+            if (sb.gameObject.GetComponent<Snowball>() != null)
+            {
+                sb.gameObject.GetComponent<Snowball>().HideSnowball();
+            }
+        }
+    }
+
+    //hide all snowballs, this spawner has produced. it should be only one snowball.
     public void ClearSnowballs()
     {
         foreach (Transform sb in transform)
         {
             if (sb.gameObject.GetComponent<Snowball>() != null)
             {
-                Destroy(sb.gameObject);
+                sb.gameObject.GetComponent<Snowball>().DestroySnowball();
             }
         }
     }

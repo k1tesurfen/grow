@@ -9,7 +9,6 @@ public class QuestionaireManager : MonoBehaviour
     public Questionaire[] questionnaires;
     public int questionnaireToDo = 0;
 
-    public TextMeshPro questionLabel;
     public GameObject spawnPlatform;
     public GameObject undoButton;
 
@@ -19,9 +18,7 @@ public class QuestionaireManager : MonoBehaviour
     public void StartQuestionnaireMode()
     {
         gm.fm.HideFortress();
-        questionLabel.gameObject.SetActive(true);
-        spawnPlatform.SetActive(true);
-        undoButton.SetActive(true);
+        spawnPlatform.GetComponent<Spawner>().ClearSnowballs();
         questionnaireToDo = 0;
         questionnaireMode = true;
         StartCoroutine(JanDelay(1f));
@@ -31,9 +28,10 @@ public class QuestionaireManager : MonoBehaviour
     //abort questionaire mode and continue with conditions and stuff
     public void EndQuestionnaireMode()
     {
+        gm.pm.ClearProjectiles();
         gm.fm.ShowFortress();
-        questionLabel.gameObject.SetActive(false);
         spawnPlatform.SetActive(false);
+        spawnPlatform.GetComponent<Spawner>().HideSnowballs() ;
         undoButton.SetActive(false);
         questionnaireMode = false;
         StartCoroutine(JanDelay(1f));
@@ -68,6 +66,9 @@ public class QuestionaireManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         if (questionnaireMode)
         {
+            spawnPlatform.SetActive(true);
+            spawnPlatform.GetComponent<Spawner>().SpawnSnowball();
+            undoButton.SetActive(true);
             StartNextQuestionaire();
         }
         else

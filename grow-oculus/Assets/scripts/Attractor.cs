@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Attractor : MonoBehaviour
 {
+    public GameManager gm;
+
     const float G = 66.74f;
 
     public int mass;
@@ -11,7 +13,7 @@ public class Attractor : MonoBehaviour
 
     //should the obToAttract be attracted or not
     public bool doAttract = false;
-    private float lifeSpan = 500f;
+    private float lifeSpan = 7f;
 
     [Range(0f, 15f)]
     public float attractionRadius;
@@ -34,7 +36,8 @@ public class Attractor : MonoBehaviour
         if (isAttractor)
         {
             if (lifeSpan < 0f)
-                gameObject.SetActive(false);
+            {
+            }
 
             lifeSpan -= Time.deltaTime;
         }
@@ -46,10 +49,16 @@ public class Attractor : MonoBehaviour
             Attractables = new List<Attractor>();
 
         Attractables.Add(this);
-        if (isAttractor)
-        {
-            particles.SetActive(true);
-        }
+    }
+
+    public void StartVisuals()
+    {
+        particles.SetActive(true);
+    }
+
+    public void StopVisuals()
+    {
+        particles.SetActive(false);
     }
 
     void OnDisable()

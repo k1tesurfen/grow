@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6019a6432909b9849bb3db3d0d46bfcf, type: 3}
+  m_Name: SAM03
+  m_EditorClassIdentifier: 
+  questionText: 'Enter at the scale, how you are currently feeling. Mark the image
+    that applies best to you:'
+  answerOptionsLabels:
+  - controlled
+  - 
+  - 
+  - 
+  - 
+  - 
+  - dominant
+  answerOptionsImages:
+  - {fileID: 21300000, guid: 7498c8da19a0601429e46cc1e309582c, type: 3}
+  - {fileID: 21300000, guid: 58ad7d4b97bbe264f8b3401aa8ef31ce, type: 3}
+  - {fileID: 21300000, guid: f0982655d5c95334fb6eab68a66e0b15, type: 3}
+  - {fileID: 21300000, guid: fa5ed92d827f10b498ed51813fc66da0, type: 3}
+  - {fileID: 21300000, guid: df8b8e73282455d43b775195c3284cad, type: 3}
+  - {fileID: 21300000, guid: da62bde005067a244ad37602d06013aa, type: 3}
+  - {fileID: 21300000, guid: 279adf5aaed03b143b2c9750d40b1c8c, type: 3}

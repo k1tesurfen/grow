@@ -8,9 +8,6 @@ public class CompetitionManager : MonoBehaviour
 {
     public GameManager gm;
 
-    //collected points of the player.
-    public int points;
-
     public Color warningColor;
 
     public List<Competitor> competitors = new List<Competitor>();
@@ -18,50 +15,78 @@ public class CompetitionManager : MonoBehaviour
     public TextMeshPro timerLabel;
     public string[] competitorNames;
 
-    //Adds points the player made
-    private void AddPoints(int points)
-    {
-        this.points += points;
-    }
 
     public void StartCompetition(InteractionMethod im)
     {
-        points = 0;
+        competitors.Clear();
         leaderBoardLabel.gameObject.SetActive(true);
         timerLabel.gameObject.SetActive(true);
         foreach (string compName in competitorNames)
         {
             competitors.Add(new Competitor(compName));
         }
+        if (im == InteractionMethod.enhanced)
+        {
+            //set handmodel to exoskeleton
+            gm.leftHand.enhancedMultiplyer = gm.enhancedThrowMultiplyer;
+            gm.rightHand.enhancedMultiplyer = gm.enhancedThrowMultiplyer;
+        }
+        else if(im == InteractionMethod.normal)
+        {
+            //set handmodel to normal glove
+            gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+            gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+        }
+        else
+        {
+            //set handmodel to magical glove
+            gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+            gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+        }
         competitors.Add(new Competitor(gm.playerName));
         gm.pm.Repopulate();
         gm.target.gameObject.SetActive(true);
+        UpdateLeaderBoard();
         StartCoroutine("Countdown", gm.timeInScenario);
     }
 
     public void EndCompetition()
     {
-        gm.points = points; 
-        
-        points = 0;
-
         leaderBoardLabel.gameObject.SetActive(false);
         timerLabel.gameObject.SetActive(false);
 
-        gm.pm.ClearProjectiles();
+        //@TODO: set handmodel to default again
+
+        if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
+        {
+            gm.blackHole.GetComponent<Attractor>().doAttract = false;
+            gm.blackHole.GetComponent<Attractor>().StopVisuals();
+            gm.blackHole.transform.position = new Vector3(0f, -10f, 0f);
+            gm.leftHand.GetComponent<Pointer>().blackHoleIsSet = false;
+            gm.rightHand.GetComponent<Pointer>().blackHoleIsSet = false;
+        }
+
+        gm.pm.HideProjectiles();
         gm.target.gameObject.SetActive(false);
-        
+
+        gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+        gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+
         gm.qm.StartQuestionnaireMode();
     }
 
-    public void UpdateLeaderBoard(int points)
+    public void UpdateLeaderBoard()
     {
         foreach (Competitor competitor in competitors)
         {
             if (competitor.name == gm.playerName)
             {
-                competitor.score += points;
-                AddPoints(points);
+                competitor.score = gm.points;
+            }
+
+            if (competitor.name != gm.playerName)
+            {
+                StartCoroutine(JanDelayScoreUpdate(competitor.name));
             }
         }
 
@@ -70,14 +95,6 @@ public class CompetitionManager : MonoBehaviour
         competitors.Reverse();
 
         UpdateLeaderBoardLabel();
-
-        foreach (Competitor c in competitors)
-        {
-            if (c.name != gm.playerName)
-            {
-                StartCoroutine(JanDelayScoreUpdate(c.name));
-            }
-        }
     }
 
     private IEnumerator JanDelayScoreUpdate(string i)
@@ -100,18 +117,18 @@ public class CompetitionManager : MonoBehaviour
     public void UpdateLeaderBoardLabel()
     {
         leaderBoardLabel.text = "Leaderboard:";
-        foreach(Competitor comp in competitors)
+        foreach (Competitor comp in competitors)
         {
             leaderBoardLabel.text += "\n" + comp.name + "\t" + comp.score;
         }
     }
-    
+
     //coroutine to countdown the remaining seconds
     private IEnumerator Countdown(int time)
     {
         while (time > 0)
         {
-            if(time < 11 && timerLabel.color == Color.white)
+            if (time < 11 && timerLabel.color == Color.white)
             {
                 timerLabel.color = warningColor;
             }
@@ -128,7 +145,7 @@ public class CompetitionManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(time / 60);
         int seconds = time % 60;
 
-        if(seconds < 10)
+        if (seconds < 10)
         {
             timerLabel.text = "" + minutes + ":0" + seconds;
         }

@@ -18,16 +18,6 @@ public class QOption : MonoBehaviour
         this.q = q;
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("selectable") && !q.answerLock)
-    //    {
-    //        q.answerLock = true;
-    //        Destroy(other.GetComponent<OVRGrabbable>());
-    //        q.SetSelection(value, gameObject, other.gameObject);
-    //    }
-    //}
-
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("selectable") && !q.answerLock)

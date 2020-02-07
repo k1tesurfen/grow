@@ -11,6 +11,8 @@ public class LatinSquare : MonoBehaviour
     private int interactionIndex = 0;
     private int scenarioIndex = 0;
 
+    public bool finished = false;
+
     //returns the scenario the player must play(competetive/explorative).
     public Scenario GetScenario()
     {
@@ -28,6 +30,10 @@ public class LatinSquare : MonoBehaviour
     {
         InteractionMethod ret = (InteractionMethod)latinSquareInteraction[gm.interactionLS, interactionIndex];
         interactionIndex++;
+        if(scenarioIndex == 1 && interactionIndex > 2)
+        {
+            finished = true; 
+        }
         return ret;
     }
 }

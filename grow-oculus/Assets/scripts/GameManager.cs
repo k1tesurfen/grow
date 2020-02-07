@@ -17,8 +17,9 @@ public class GameManager : MonoBehaviour
     public ProjectileManager pm;
     public UndoButton undoButton;
     public GameObject blackHole;
-
-
+    public GameObject endScreen;
+    public OVRGrabber leftHand;
+    public OVRGrabber rightHand;
 
     //participantID 
     [Space(20)]
@@ -27,6 +28,9 @@ public class GameManager : MonoBehaviour
     //Count up for each participant.
     public int playerNumber;
     public bool rightHanded;
+
+    public float enhancedThrowMultiplyer = 5f;
+    public float defaultThrowMultiplyer = 2f;
 
     public bool storyTime;
 
@@ -44,12 +48,16 @@ public class GameManager : MonoBehaviour
 
     //all information gathered for logging
     [HideInInspector]
-    public int points;
+    public int points = 0;
     [HideInInspector]
-    public float accuracy;
+    public int thrownSnowballs = 0;
+    [HideInInspector]
+    public int snowballsOnTarget = 0;
+    [HideInInspector]
+    public float accuracy = 0f;
 
     [HideInInspector]
-    public List<int> answers;
+    public List<int> answers = new List<int>();
 
 
     [Space(30)]
@@ -71,14 +79,6 @@ public class GameManager : MonoBehaviour
         InitiateExperiment();
     }
 
-    private void Update()
-    {
-        if (OVRInput.GetDown(OVRInput.Button.One))
-        {
-            blackHole.SetActive(true);
-        }
-    }
-
     public void InitiateExperiment()
     {
         //set handedness, 
@@ -88,8 +88,6 @@ public class GameManager : MonoBehaviour
 
     public void NextCondition()
     {
-        Debug.Log("starting next scenario");
-
         if (!firstCondition)
         {
             //Log the previous conditions data.
@@ -98,6 +96,13 @@ public class GameManager : MonoBehaviour
         else
         {
             firstCondition = false;
+        }
+
+        //check if the experiment has already finished
+        if (latinSquare.finished)
+        {
+            EndExperiment();
+            return;
         }
 
         currentScenario = latinSquare.GetScenario();
@@ -118,12 +123,17 @@ public class GameManager : MonoBehaviour
     }
 
     //log data from current condition
+    //timestamp - playerID - scenario - interactionMethod - snowballsthrown - snowballsOnTarget - points - accuracyAVG - questionanswers
     public void LogCondition()
     {
         string questionnaireAnswers = string.Join(";", answers);
         logger.Log(GetTimeStamp() + ";" + playerName + ";" + currentScenario + ";" + currentInteractionMethod + ";"
-                         + points + ";" + questionnaireAnswers);
+                         + thrownSnowballs + ";" + snowballsOnTarget + ";" + points + ";" + (accuracy/snowballsOnTarget) + ";" + questionnaireAnswers);
         answers.Clear();
+        points = 0;
+        accuracy = 0;
+        snowballsOnTarget = 0;
+
     }
 
     //sets the playarea to fit the handedness of a player
@@ -133,6 +143,23 @@ public class GameManager : MonoBehaviour
         //for a righthanded player the button has to be on the left side to avoid accidental activation.
         undoButton.SetPosition(rightHanded);
         undoButton.SetRotation(rightHanded);
+
+        if (rightHanded)
+        {
+            rightHand.gameObject.SetActive(true);
+            rightHand.enhancedMultiplyer = defaultThrowMultiplyer;
+        }
+        else
+        {
+            leftHand.gameObject.SetActive(true);
+            leftHand.enhancedMultiplyer = defaultThrowMultiplyer;
+        }
+
+    }
+
+    public void EndExperiment()
+    {
+        endScreen.SetActive(true);
     }
 
 

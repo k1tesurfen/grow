@@ -12,7 +12,18 @@ public class ProjectileManager : MonoBehaviour
         {
             foreach(Transform child in sp.transform)
             {
-                Destroy(child.gameObject);
+                child.gameObject.GetComponent<Snowball>().DestroySnowball();
+            }
+        }
+    }
+
+    public void HideProjectiles()
+    {
+        foreach(Spawner sp in spawners)
+        {
+            foreach(Transform child in sp.transform)
+            {
+                child.gameObject.GetComponent<Snowball>().HideSnowball();
             }
         }
     }
