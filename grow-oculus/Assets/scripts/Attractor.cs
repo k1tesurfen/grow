@@ -7,7 +7,8 @@ public class Attractor : MonoBehaviour
 
     const float G = 66.74f;
 
-    public int mass;
+
+    public int mass { get { return (int)AdJustParticleSystem.Size * 20; } }
     public static List<Attractor> Attractables;
     public bool isAttractor = false;
 

@@ -12,7 +12,7 @@ public class ProjectileManager : MonoBehaviour
         {
             foreach(Transform child in sp.transform)
             {
-                child.gameObject.GetComponent<Snowball>().DestroySnowball();
+                child.gameObject.GetComponent<Projectile>().DestroyProjectile();
             }
         }
     }
@@ -23,7 +23,7 @@ public class ProjectileManager : MonoBehaviour
         {
             foreach(Transform child in sp.transform)
             {
-                child.gameObject.GetComponent<Snowball>().HideSnowball();
+                child.gameObject.GetComponent<Projectile>().HideProjectile();
             }
         }
     }
@@ -32,7 +32,8 @@ public class ProjectileManager : MonoBehaviour
     {
         foreach(Spawner sp in spawners)
         {
-            sp.ForceSpawnSnowball();
+            Debug.Log("====================Force Spawning new Projectiles");
+            sp.ForceSpawnProjectile();
         }
     }
 

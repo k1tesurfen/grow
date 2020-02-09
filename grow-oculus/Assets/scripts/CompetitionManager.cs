@@ -42,6 +42,7 @@ public class CompetitionManager : MonoBehaviour
             //set handmodel to magical glove
             gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+            Pointer.activateLaser = true;
         }
         competitors.Add(new Competitor(gm.playerName));
         gm.pm.Repopulate();
@@ -62,8 +63,7 @@ public class CompetitionManager : MonoBehaviour
             gm.blackHole.GetComponent<Attractor>().doAttract = false;
             gm.blackHole.GetComponent<Attractor>().StopVisuals();
             gm.blackHole.transform.position = new Vector3(0f, -10f, 0f);
-            gm.leftHand.GetComponent<Pointer>().blackHoleIsSet = false;
-            gm.rightHand.GetComponent<Pointer>().blackHoleIsSet = false;
+            AdJustParticleSystem.Collapse();
         }
 
         gm.pm.HideProjectiles();

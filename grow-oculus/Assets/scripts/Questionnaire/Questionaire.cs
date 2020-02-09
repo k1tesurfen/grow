@@ -65,31 +65,31 @@ public class Questionaire : MonoBehaviour
     }
 
     //if a selection has been made this selection will update the value
-    public void SetSelection(int value, GameObject activeBucket, GameObject activeSnowball)
+    public void SetSelection(int value, GameObject activeBucket, GameObject activeProjectile)
     {
         selection = value;
 
         //set selectionindicator
         activeBucket.GetComponent<QOption>().SetActiveMaterial();
 
-        StartCoroutine(JanDelay(0.8f, activeBucket, activeSnowball));
+        StartCoroutine(JanDelay(0.8f, activeBucket, activeProjectile));
     }
 
     //adds a delay for the answer to get finally accepted.
-    IEnumerator JanDelay(float time, GameObject activeBucket, GameObject activeSnowball)
+    IEnumerator JanDelay(float time, GameObject activeBucket, GameObject activeProjectile)
     {
         yield return new WaitForSeconds(time);
-        SetAnswer(selection, activeBucket, activeSnowball);
+        SetAnswer(selection, activeBucket, activeProjectile);
     }
 
     //the current selection is saved as answer of the question
     //the currentQuestion is raised.
-    public void SetAnswer(int value, GameObject activeBucket, GameObject activeSnowball)
+    public void SetAnswer(int value, GameObject activeBucket, GameObject activeProjectile)
     {
         try
         {
             //remove/destroy indicators
-            activeSnowball.gameObject.SetActive(false);
+            activeProjectile.gameObject.SetActive(false);
         }
         catch
         {

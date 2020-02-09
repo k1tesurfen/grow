@@ -50,9 +50,7 @@ public class ExplorationManager : MonoBehaviour
         {
             gm.blackHole.GetComponent<Attractor>().doAttract = false;
             gm.blackHole.GetComponent<Attractor>().StopVisuals();
-            gm.blackHole.transform.position = new Vector3(0f, -10f, 0f);
-            gm.leftHand.GetComponent<Pointer>().blackHoleIsSet = false;
-            gm.rightHand.GetComponent<Pointer>().blackHoleIsSet = false;
+            AdJustParticleSystem.Collapse();
         }
 
         gm.qm.StartQuestionnaireMode();

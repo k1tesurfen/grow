@@ -18,9 +18,9 @@ public class Pointer : MonoBehaviour
     public float grabEnd = 0.35f;
 
     public bool lasering;
-    public bool blackHoleIsSet = false;
 
-    public Vector3 blackHoleOffset = new Vector3(0f,0f, -0.2f);
+    public Vector3 blackHoleOffset = new Vector3(0f, 0f, -0.2f);
+
 
     [HideInInspector]
     public Vector3 endPos = new Vector3(0f, -20f, 0f);
@@ -34,12 +34,19 @@ public class Pointer : MonoBehaviour
         m_controller = gameObject.GetComponent<OVRGrabber>().m_controller;
     }
 
+    public static bool activateLaser = false;
+
     // Update is called once per frame
     void FixedUpdate()
     {
-
-        if (gm.currentInteractionMethod == InteractionMethod.magical && !blackHoleIsSet)
+        if (activateLaser)
         {
+            activateLaser = false;
+            lineRenderer.enabled = true;
+        }
+        if (gm.currentInteractionMethod == InteractionMethod.magical)
+        {
+            UpdateLength();
             float prevFlex = m_prevFlex;
             // Update values from inputs
             m_prevFlex = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, m_controller);
@@ -52,33 +59,31 @@ public class Pointer : MonoBehaviour
     {
         if (m_prevFlex >= grabBegin)
         {
-            if (!Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("snowball")))
+            if (!AdJustParticleSystem.isBlackHoleOpen && !Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("Projectile")))
             {
-                lineRenderer.enabled = true;
-                UpdateLength();
-                lasering = true;
+                lineRenderer.enabled = false;
+                if (Vector3.Distance(endPos, Vector3.zero) > 4f)
+                {
+                    SpawnBlackHole();
+                }
             }
         }
         else if ((m_prevFlex <= grabEnd) && (prevFlex > grabEnd))
         {
-            if (!Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("snowball")))
+            if (!Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("Projectile")))
             {
-                if (lasering)
-                {
-                    if (Vector3.Distance(endPos, Vector3.zero) > 4f)
-                    {
-                        Debug.Log("Setting Blackhole");
-                        gm.blackHole.transform.position = endPos + blackHoleOffset;
-                        gm.blackHole.GetComponent<Attractor>().doAttract = true;
-                        gm.blackHole.GetComponent<Attractor>().StartVisuals();
-                        blackHoleIsSet = true;
-                    }
-                    lineRenderer.enabled = false;
-
-                    lasering = false;
-                }
+                lineRenderer.enabled = true;
             }
         }
+    }
+
+    public void SpawnBlackHole()
+    {
+        Debug.Log("Setting Blackhole");
+        gm.blackHole.transform.position = endPos + blackHoleOffset;
+        gm.blackHole.GetComponent<Attractor>().doAttract = true;
+        gm.blackHole.GetComponent<Attractor>().StartVisuals();
+        AdJustParticleSystem.Respawn();
     }
 
     void UpdateLength()
@@ -117,3 +122,4 @@ public class Pointer : MonoBehaviour
         return transform.position + (transform.forward * length);
     }
 }
+

@@ -18,7 +18,7 @@ public class QuestionaireManager : MonoBehaviour
     public void StartQuestionnaireMode()
     {
         gm.fm.HideFortress();
-        spawnPlatform.GetComponent<Spawner>().ClearSnowballs();
+        spawnPlatform.GetComponent<Spawner>().ClearProjectiles();
         questionnaireToDo = 0;
         questionnaireMode = true;
         StartCoroutine(JanDelay(1f));
@@ -31,7 +31,7 @@ public class QuestionaireManager : MonoBehaviour
         gm.pm.ClearProjectiles();
         gm.fm.ShowFortress();
         spawnPlatform.SetActive(false);
-        spawnPlatform.GetComponent<Spawner>().HideSnowballs() ;
+        spawnPlatform.GetComponent<Spawner>().HideProjectiles() ;
         undoButton.SetActive(false);
         questionnaireMode = false;
         StartCoroutine(JanDelay(1f));
@@ -67,7 +67,7 @@ public class QuestionaireManager : MonoBehaviour
         if (questionnaireMode)
         {
             spawnPlatform.SetActive(true);
-            spawnPlatform.GetComponent<Spawner>().SpawnSnowball();
+            spawnPlatform.GetComponent<Spawner>().SpawnProjectile();
             undoButton.SetActive(true);
             StartNextQuestionaire();
         }

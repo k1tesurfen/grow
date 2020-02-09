@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,16 @@ public class GameManager : MonoBehaviour
     public GameObject endScreen;
     public OVRGrabber leftHand;
     public OVRGrabber rightHand;
+
+    private static float scale;
+    public static float Scale { get { return scale; } }
+
+
+    public Vector3 lastPos;
+    public List<float> lastVelocities = new List<float>();
+
+    public float defaultTwister = 1f;
+    public float twisterDeviation = 0.3f;
 
     //participantID 
     [Space(20)]
@@ -44,15 +55,18 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public InteractionMethod currentInteractionMethod;
 
+    [HideInInspector]
+    public BlackHoleStatus currentBlackHoleStatus;
+
     public int timeInScenario = 120;
 
     //all information gathered for logging
     [HideInInspector]
     public int points = 0;
     [HideInInspector]
-    public int thrownSnowballs = 0;
+    public int thrownProjectiles = 0;
     [HideInInspector]
-    public int snowballsOnTarget = 0;
+    public int ProjectilesOnTarget = 0;
     [HideInInspector]
     public float accuracy = 0f;
 
@@ -77,6 +91,30 @@ public class GameManager : MonoBehaviour
         //competition.StartGame();
         //competition.UpdateLeaderBoard(25);
         InitiateExperiment();
+    }
+
+    public void FixedUpdate()
+    {
+        if(lastPos != null)
+        {
+            lastVelocities.Add(Vector3.Distance(leftHand.transform.position, lastPos)/Time.fixedDeltaTime);
+            while(lastVelocities.Count >= 15)
+            {
+                lastVelocities.RemoveAt(0);
+            }
+        }
+        float velocity = lastVelocities.Sum();
+
+        velocity /= lastVelocities.Count;
+        scale = Mathf.Abs(velocity - defaultTwister);
+        if(scale > twisterDeviation)
+        {
+            scale = twisterDeviation;
+        }
+        scale /= twisterDeviation;
+        scale = 1 - scale;
+        //Debug.Log("Scale: " + scale + " Velocity: " + velocity);
+        lastPos = leftHand.transform.position;
     }
 
     public void InitiateExperiment()
@@ -123,16 +161,16 @@ public class GameManager : MonoBehaviour
     }
 
     //log data from current condition
-    //timestamp - playerID - scenario - interactionMethod - snowballsthrown - snowballsOnTarget - points - accuracyAVG - questionanswers
+    //timestamp - playerID - scenario - interactionMethod - Projectilesthrown - ProjectilesOnTarget - points - accuracyAVG - questionanswers
     public void LogCondition()
     {
         string questionnaireAnswers = string.Join(";", answers);
         logger.Log(GetTimeStamp() + ";" + playerName + ";" + currentScenario + ";" + currentInteractionMethod + ";"
-                         + thrownSnowballs + ";" + snowballsOnTarget + ";" + points + ";" + (accuracy/snowballsOnTarget) + ";" + questionnaireAnswers);
+                         + thrownProjectiles + ";" + ProjectilesOnTarget + ";" + points + ";" + (accuracy/ProjectilesOnTarget) + ";" + questionnaireAnswers);
         answers.Clear();
         points = 0;
         accuracy = 0;
-        snowballsOnTarget = 0;
+        ProjectilesOnTarget = 0;
 
     }
 
@@ -146,13 +184,13 @@ public class GameManager : MonoBehaviour
 
         if (rightHanded)
         {
-            rightHand.gameObject.SetActive(true);
             rightHand.enhancedMultiplyer = defaultThrowMultiplyer;
+            leftHand.GetComponent<Pointer>().enabled = true;
         }
         else
         {
-            leftHand.gameObject.SetActive(true);
             leftHand.enhancedMultiplyer = defaultThrowMultiplyer;
+            rightHand.GetComponent<Pointer>().enabled = true;
         }
 
     }
@@ -181,5 +219,12 @@ public enum Scenario
 {
     exploratory = 0,
     competitive = 1
+};
+
+public enum BlackHoleStatus
+{
+    selection = 0,
+    force = 1,
+    wurf = 2
 };
 

@@ -6,112 +6,102 @@ public class Spawner : MonoBehaviour
     public GameManager gm;
 
     public GameObject spawnObject;
-    public Collider spawnZone;
+    public SphereCollider spawnZone;
+    [HideInInspector]
+    public float spawnRadius;
 
     [HideInInspector]
-    public GameObject snowball;
-    public Logger snowballLogger;
+    public GameObject projectile;
+    public Logger projectileLogger;
 
-    [Space(20)]
     public bool spawnForQuestionnaire = false;
 
-    public void Start()
-    {
-        spawnZone = GetComponent<Collider>();
-        if (spawnForQuestionnaire)
-        {
-            SpawnSnowball();
-        }
-    }
-
-    //Gets triggered when a snowball is taken from the spawning zone.
+    //Gets triggered when a Projectile is taken from the spawning zone.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.GetComponent<OVRGrabbable>() != null)
+        if (other.gameObject.GetComponent<Projectile>())
         {
-            other.GetComponent<Rigidbody>().useGravity = true;
-            other.GetComponent<Snowball>().armed = true;
-            SpawnSnowball();
+            if (!other.gameObject.GetComponent<Projectile>().isArmed)
+            {
+                other.GetComponent<Rigidbody>().useGravity = true;
+                other.GetComponent<Projectile>().isArmed = true;
+                SpawnProjectile();
+            }
         }
     }
 
 
-    //if there is no snowball in the spawning area spawn a snowball.
+    //if there is no Projectile in the spawning area spawn a Projectile.
     //if spawning area is crowded retry after 1s
-    public void SpawnSnowball()
+    public void SpawnProjectile()
     {
-        if (!Physics.CheckSphere(transform.position, 0.08f, LayerMask.GetMask("snowball")))
-        {
-            snowball = Instantiate(spawnObject, transform);
-            snowball.GetComponent<Snowball>().gm = gm;
-            snowball.GetComponent<Snowball>().snowballLogger = snowballLogger;
-            snowball.GetComponent<Snowball>().grabbable = snowball.GetComponent<OVRGrabbable>();
+        projectile = Instantiate(spawnObject, transform.position, Quaternion.LookRotation(Vector3.down, Vector3.forward), transform);
+        projectile.GetComponent<Projectile>().gm = gm;
+        projectile.GetComponent<Projectile>().projectileLogger = projectileLogger;
+        projectile.GetComponent<Projectile>().grabbable = projectile.GetComponent<OVRGrabbable>();
+        projectile.GetComponent<Projectile>().rb = projectile.GetComponent<Rigidbody>();
 
-            if (spawnForQuestionnaire)
-            {
-                snowball.GetComponent<Snowball>().spawnForQuestionnaire = true;
-                snowball.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-                snowball.tag = "selectable";
-            }
-        }
-        else
+        if (spawnForQuestionnaire)
         {
-            StartCoroutine(JanDelay(1.5f));
+            projectile.GetComponent<Projectile>().spawnForQuestionnaire = true;
+            projectile.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            projectile.tag = "selectable";
         }
     }
 
-    //for manually adding snowballs to the spawners
-    public void ForceSpawnSnowball()
+    //for manually adding Projectiles to the spawners
+    public void ForceSpawnProjectile()
     {
-        if (!Physics.CheckSphere(transform.position, 0.08f, LayerMask.GetMask("snowball")))
-        {
-            snowball = Instantiate(spawnObject, transform);
-            snowball.GetComponent<Snowball>().gm = gm;
-            snowball.GetComponent<Snowball>().snowballLogger = snowballLogger;
-            snowball.GetComponent<Snowball>().grabbable = snowball.GetComponent<OVRGrabbable>();
+        projectile = Instantiate(spawnObject, transform.position, Quaternion.LookRotation(Vector3.down, Vector3.forward), transform);
+        projectile.GetComponent<Projectile>().gm = gm;
+        projectile.GetComponent<Projectile>().projectileLogger = projectileLogger;
+        projectile.GetComponent<Projectile>().grabbable = projectile.GetComponent<OVRGrabbable>();
+        projectile.GetComponent<Projectile>().rb = projectile.GetComponent<Rigidbody>();
 
-            if (spawnForQuestionnaire)
-            {
-                snowball.GetComponent<Snowball>().spawnForQuestionnaire = true;
-                snowball.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-                snowball.tag = "selectable";
-            }
+        if (spawnForQuestionnaire)
+        {
+            projectile.GetComponent<Projectile>().spawnForQuestionnaire = true;
+            projectile.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            projectile.tag = "selectable";
         }
     }
 
-    //hide all snowballs, this spawner has produced. it should be only one snowball.
-    public void HideSnowballs()
+    //hide all Projectiles, this spawner has produced. it should be only one Projectile.
+    public void HideProjectiles()
     {
         foreach (Transform sb in transform)
         {
-            if (sb.gameObject.GetComponent<Snowball>() != null)
+            if (sb.gameObject.GetComponent<Projectile>() != null)
             {
-                sb.gameObject.GetComponent<Snowball>().HideSnowball();
+                sb.gameObject.GetComponent<Projectile>().HideProjectile();
             }
         }
     }
 
-    //hide all snowballs, this spawner has produced. it should be only one snowball.
-    public void ClearSnowballs()
+    //hide all Projectiles, this spawner has produced. it should be only one Projectile.
+    public void ClearProjectiles()
     {
         foreach (Transform sb in transform)
         {
-            if (sb.gameObject.GetComponent<Snowball>() != null)
+            if (sb.gameObject.GetComponent<Projectile>() != null)
             {
-                sb.gameObject.GetComponent<Snowball>().DestroySnowball();
+                sb.gameObject.GetComponent<Projectile>().DestroyProjectile();
             }
         }
     }
 
-    //Coroutine to execute SpawnSnowball after a set amount of time.
+    //Coroutine to execute SpawnProjectile after a set amount of time.
     IEnumerator JanDelay(float time)
     {
         yield return new WaitForSeconds(time);
-        SpawnSnowball();
+        SpawnProjectile();
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(transform.position, 0.1f);
+        if (spawnZone != null)
+        {
+            Gizmos.DrawSphere(transform.position, spawnZone.radius);
+        }
     }
 }

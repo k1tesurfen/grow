@@ -104,7 +104,7 @@ public class Throw : MonoBehaviour
     //{
     //    if (distance <= distanceThreshold)
     //    {
-    //        //activate hover effect on snowball
+    //        //activate hover effect on Projectile
     //        GetComponent<Renderer>().material = highlightMaterial;
     //    }
     //}
@@ -113,12 +113,12 @@ public class Throw : MonoBehaviour
     //{
     //    if (distance <= distanceThreshold)
     //    {
-    //        //deactivate hover effect on snowball
+    //        //deactivate hover effect on Projectile
     //        transform.GetComponent<Renderer>().material = defaultMaterial;
     //    }
     //}
 
-    //detects if snowball hits anything, creates impact and destroys snowball gameobject
+    //detects if Projectile hits anything, creates impact and destroys Projectile gameobject
     private void OnCollisionEnter(Collision col)
     {
         if (flying)
@@ -133,7 +133,7 @@ public class Throw : MonoBehaviour
             //log throw properties
             //gm.logger.Log(col.collider.transform.gameObject.name);
 
-            //snowball destroy sequence
+            //Projectile destroy sequence
             gm.scatter.Explode(col.GetContact(0).point);
             Destroy(gameObject);
         }
