@@ -197,6 +197,7 @@ public class GameManager : MonoBehaviour
 
     public void EndExperiment()
     {
+        qm.spawnPlatform.GetComponent<Spawner>().HideProjectiles();
         endScreen.SetActive(true);
     }
 

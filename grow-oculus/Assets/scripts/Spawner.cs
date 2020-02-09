@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -14,7 +15,13 @@ public class Spawner : MonoBehaviour
     public GameObject projectile;
     public Logger projectileLogger;
 
+    public List<GameObject> spawnedProjectiles;
     public bool spawnForQuestionnaire = false;
+
+    public void Start()
+    {
+        spawnedProjectiles = new List<GameObject>();
+    }
 
     //Gets triggered when a Projectile is taken from the spawning zone.
     private void OnTriggerExit(Collider other)
@@ -47,6 +54,10 @@ public class Spawner : MonoBehaviour
             projectile.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
             projectile.tag = "selectable";
         }
+        else
+        {
+            spawnedProjectiles.Add(projectile);
+        }
     }
 
     //for manually adding Projectiles to the spawners
@@ -64,16 +75,31 @@ public class Spawner : MonoBehaviour
             projectile.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
             projectile.tag = "selectable";
         }
+        else
+        {
+            spawnedProjectiles.Add(projectile);
+        }
     }
 
     //hide all Projectiles, this spawner has produced. it should be only one Projectile.
     public void HideProjectiles()
     {
-        foreach (Transform sb in transform)
+        if (!spawnForQuestionnaire)
         {
-            if (sb.gameObject.GetComponent<Projectile>() != null)
+            foreach (GameObject p in spawnedProjectiles)
             {
-                sb.gameObject.GetComponent<Projectile>().HideProjectile();
+                Debug.Log("hiding dart");
+                p.GetComponent<Projectile>().HideProjectile();
+            }
+        }
+        else
+        {
+            foreach(Transform p in transform)
+            {
+                if(p.gameObject.GetComponent<Projectile>() != null)
+                {
+                    p.gameObject.GetComponent<Projectile>().HideProjectile();
+                }
             }
         }
     }
@@ -81,11 +107,22 @@ public class Spawner : MonoBehaviour
     //hide all Projectiles, this spawner has produced. it should be only one Projectile.
     public void ClearProjectiles()
     {
-        foreach (Transform sb in transform)
+        if (!spawnForQuestionnaire)
         {
-            if (sb.gameObject.GetComponent<Projectile>() != null)
+            foreach (GameObject p in spawnedProjectiles)
             {
-                sb.gameObject.GetComponent<Projectile>().DestroyProjectile();
+                p.GetComponent<Projectile>().DestroyProjectile();
+            }
+            spawnedProjectiles.Clear();
+        }
+        else
+        {
+            foreach(Transform p in transform)
+            {
+                if(p.gameObject.GetComponent<Projectile>() != null)
+                {
+                    p.gameObject.GetComponent<Projectile>().DestroyProjectile();
+                }
             }
         }
     }

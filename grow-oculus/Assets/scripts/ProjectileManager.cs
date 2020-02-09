@@ -10,10 +10,7 @@ public class ProjectileManager : MonoBehaviour
     {
         foreach(Spawner sp in spawners)
         {
-            foreach(Transform child in sp.transform)
-            {
-                child.gameObject.GetComponent<Projectile>().DestroyProjectile();
-            }
+            sp.ClearProjectiles();
         }
     }
 
@@ -21,10 +18,7 @@ public class ProjectileManager : MonoBehaviour
     {
         foreach(Spawner sp in spawners)
         {
-            foreach(Transform child in sp.transform)
-            {
-                child.gameObject.GetComponent<Projectile>().HideProjectile();
-            }
+            sp.HideProjectiles();
         }
     }
 
@@ -32,7 +26,6 @@ public class ProjectileManager : MonoBehaviour
     {
         foreach(Spawner sp in spawners)
         {
-            Debug.Log("====================Force Spawning new Projectiles");
             sp.ForceSpawnProjectile();
         }
     }

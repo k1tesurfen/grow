@@ -26,43 +26,14 @@ public class Projectile : MonoBehaviour
 
     public Rigidbody rb;
 
-    private void Enable()
-    {
-        //groundCollider = gameObject.AddComponent<SphereCollider>();
-        //groundCollider.radius = 0.062f;
-        //groundCollider.isTrigger = false;
-    }
-
-    ////detects if Projectile hits anything, creates impact and destroys Projectile gameobject
-    //private void OnTriggerEnter(Collider col)
-    //{
-    //    Debug.Log("I'm a Projectile and colliding with : " + col.gameObject.name);
-    //    Debug.Log("Do I have the correct layer? " + col.transform.gameObject.layer);
-    //    if (!gameObject.GetComponent<OVRGrabbable>().isGrabbed && armed && col.transform.gameObject.layer == 10)
-    //    {
-    //        Debug.Log("And I'm even not grabbed.");
-    //        //if the hit object is target, register the hit
-    //        if (col.gameObject.name
-    //            == "Target")
-    //        {
-    //            gm.target.RegisterHit(transform.position);
-    //        }
-
-    //        //log throw properties
-    //        //gm.logger.Log(col.collider.transform.gameObject.name);
-
-    //        //Projectile destroy sequence
-    //        gm.scatter.Explode(transform.position);
-    //        Destroy(gameObject);
-    //    }
-    //}
+    public MeshRenderer[] meshRenderers;
 
     private void FixedUpdate()
     {
         //this condition only occurs when a Projectile is thrown
         if (isArmed && !grabbable.isGrabbed)
         {
-            if (isBeforeImpact)
+            if (isBeforeImpact && rb.velocity.sqrMagnitude > 0f)
             {
                 rb.rotation = Quaternion.LookRotation(rb.velocity);
             }
@@ -85,7 +56,11 @@ public class Projectile : MonoBehaviour
 
     public void HideProjectile()
     {
-        gameObject.SetActive(false);
+        foreach(MeshRenderer mr in meshRenderers)
+        {
+            mr.enabled = false;
+            attractor.enabled = false;
+        }
     }
 
     public void DestroyProjectile()
@@ -105,7 +80,7 @@ public class Projectile : MonoBehaviour
 
                     //if the hit object is target, register the hit
                     if (col.collider.transform.gameObject.name
-                        == "Target")
+                        == "Target" && isBeforeImpact)
                     {
                         //gm.target.RegisterHit(col.GetContact(0).point);
 
@@ -155,7 +130,12 @@ public class Projectile : MonoBehaviour
                 isBeforeImpact = false;
                 rb.useGravity = false;
                 rb.isKinematic = true;
-                StartCoroutine(JanDelay(1f));
+
+                if (spawnForQuestionnaire)
+                {
+                    gm.scatter.Explode(col.GetContact(0).point);
+                    DestroyProjectile();
+                }
             }
         }
     }

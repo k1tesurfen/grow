@@ -168,3 +168,5 @@ MonoBehaviour:
   isBeforeImpact: 1
   maxSpeed: 0
   rb: {fileID: 0}
+  meshRenderers:
+  - {fileID: 7100182471017076726}

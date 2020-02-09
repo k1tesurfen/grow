@@ -25,7 +25,7 @@ public class QOption : MonoBehaviour
             if (!other.GetComponent<OVRGrabbable>().isGrabbed)
             {
                 q.answerLock = true;
-                q.SetSelection(value, gameObject, other.gameObject);
+                q.SetSelection(value, gameObject, other.gameObject.GetComponent<Projectile>());
             }
         }
     }

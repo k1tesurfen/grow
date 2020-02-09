@@ -32,6 +32,7 @@ public class ExplorationManager : MonoBehaviour
             //set handmodel to magical glove
             gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+            Pointer.activateLaser = true;
         }
 
         StartCoroutine(Countdown(gm.timeInScenario));
@@ -39,12 +40,17 @@ public class ExplorationManager : MonoBehaviour
 
     public void EndExploration()
     {
-        gm.pm.HideProjectiles();
         gm.target.gameObject.SetActive(false);
 
         //@TODO: set handmodel to default
         gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
         gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+
+        //hide darts
+        gm.pm.HideProjectiles();
+
+        //destroy snowballs from previous questionnaire mode.
+        gm.qm.spawnPlatform.GetComponent<Spawner>().ClearProjectiles();
 
         if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
         {

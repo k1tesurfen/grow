@@ -65,7 +65,7 @@ public class Questionaire : MonoBehaviour
     }
 
     //if a selection has been made this selection will update the value
-    public void SetSelection(int value, GameObject activeBucket, GameObject activeProjectile)
+    public void SetSelection(int value, GameObject activeBucket, Projectile activeProjectile)
     {
         selection = value;
 
@@ -76,7 +76,7 @@ public class Questionaire : MonoBehaviour
     }
 
     //adds a delay for the answer to get finally accepted.
-    IEnumerator JanDelay(float time, GameObject activeBucket, GameObject activeProjectile)
+    IEnumerator JanDelay(float time, GameObject activeBucket, Projectile activeProjectile)
     {
         yield return new WaitForSeconds(time);
         SetAnswer(selection, activeBucket, activeProjectile);
@@ -84,12 +84,12 @@ public class Questionaire : MonoBehaviour
 
     //the current selection is saved as answer of the question
     //the currentQuestion is raised.
-    public void SetAnswer(int value, GameObject activeBucket, GameObject activeProjectile)
+    public void SetAnswer(int value, GameObject activeBucket, Projectile activeProjectile)
     {
         try
         {
             //remove/destroy indicators
-            activeProjectile.gameObject.SetActive(false);
+            activeProjectile.DestroyProjectile();
         }
         catch
         {

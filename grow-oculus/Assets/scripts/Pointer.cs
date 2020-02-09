@@ -3,7 +3,7 @@
 public class Pointer : MonoBehaviour
 {
     public GameManager gm;
-    public LineRenderer lineRenderer = null;
+    public LineRenderer lineRenderer;
 
     public float defaultLength = 50f;
 
@@ -88,7 +88,7 @@ public class Pointer : MonoBehaviour
 
     void UpdateLength()
     {
-        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(0, transform.position + (0.1f * transform.forward));
 
         lineRenderer.SetPosition(1, CalculateEnd());
     }
@@ -110,7 +110,7 @@ public class Pointer : MonoBehaviour
     {
         RaycastHit hit;
 
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new Ray(transform.position + (0.1f * transform.forward), transform.forward);
 
         Physics.Raycast(ray, out hit, lm);
 

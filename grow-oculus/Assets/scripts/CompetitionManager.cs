@@ -66,7 +66,13 @@ public class CompetitionManager : MonoBehaviour
             AdJustParticleSystem.Collapse();
         }
 
+        //destroy hidden snowballs from questionnairemode
+        gm.qm.spawnPlatform.GetComponent<Spawner>().ClearProjectiles();
+
+        //hide projectiles - they will get destroyed at the end of questionnairemode
+        Debug.Log("Hiding Projectiles from pm");
         gm.pm.HideProjectiles();
+
         gm.target.gameObject.SetActive(false);
 
         gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;

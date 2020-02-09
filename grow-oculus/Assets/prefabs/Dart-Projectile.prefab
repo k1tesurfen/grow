@@ -278,6 +278,10 @@ MonoBehaviour:
   isBeforeImpact: 1
   maxSpeed: 0
   rb: {fileID: 0}
+  meshRenderers:
+  - {fileID: 6787963711611728274}
+  - {fileID: 6787963711611728272}
+  - {fileID: 6787963711611728278}
 --- !u!1 &6787963711613661014
 GameObject:
   m_ObjectHideFlags: 0
