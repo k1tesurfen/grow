@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public GameObject endScreen;
     public OVRGrabber leftHand;
     public OVRGrabber rightHand;
+    public Pointer mainHand;
+    public Pointer offHand;
 
     private static float scale;
     public static float Scale { get { return scale; } }
@@ -95,26 +97,65 @@ public class GameManager : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if(lastPos != null)
+        //
+        // Twistermovement of the hand
+        //
+        if (currentInteractionMethod == InteractionMethod.magical)
         {
-            lastVelocities.Add(Vector3.Distance(leftHand.transform.position, lastPos)/Time.fixedDeltaTime);
-            while(lastVelocities.Count >= 15)
+            if (lastPos != null)
             {
-                lastVelocities.RemoveAt(0);
+                lastVelocities.Add(Vector3.Distance(mainHand.transform.position, lastPos) / Time.fixedDeltaTime);
+                while (lastVelocities.Count >= 15)
+                {
+                    lastVelocities.RemoveAt(0);
+                }
             }
-        }
-        float velocity = lastVelocities.Sum();
+            float velocity = lastVelocities.Sum();
 
-        velocity /= lastVelocities.Count;
-        scale = Mathf.Abs(velocity - defaultTwister);
-        if(scale > twisterDeviation)
-        {
-            scale = twisterDeviation;
+            velocity /= lastVelocities.Count;
+            scale = velocity - defaultTwister;
+            if(scale < 0)
+            {
+                scale = 0;
+            }
+            if (scale > twisterDeviation)
+            {
+                scale = twisterDeviation;
+            }
+            scale /= twisterDeviation;
+            //Debug.Log("Scale: " + scale + " Velocity: " + velocity);
+            lastPos = mainHand.transform.position;
+
+            //if (lastPos != null)
+            //{
+            //    lastVelocities.Add(Vector3.Distance(mainHand.transform.position, lastPos) / Time.fixedDeltaTime);
+            //    while (lastVelocities.Count >= 15)
+            //    {
+            //        lastVelocities.RemoveAt(0);
+            //    }
+            //}
+            //float velocity = lastVelocities.Sum();
+
+            //velocity /= lastVelocities.Count;
+            //scale = Mathf.Abs(velocity - defaultTwister);
+            //scale = velocity - defaultTwister;
+            ////scale has to be between defaulttwister and max(default+deviation)
+            //if (scale < defaultTwister)
+            //{
+            //    scale = 0;
+            //}
+            //if(scale > defaultTwister + twisterDeviation)
+            //{
+            //    scale = twisterDeviation;
+            //}
+            //scale /= twisterDeviation;
+            //scale = 1 - scale;
+            ////Debug.Log("Scale: " + scale + " Velocity: " + velocity);
+            //lastPos = mainHand.transform.position;
         }
-        scale /= twisterDeviation;
-        scale = 1 - scale;
-        //Debug.Log("Scale: " + scale + " Velocity: " + velocity);
-        lastPos = leftHand.transform.position;
+        //
+        // END Twistermovement of the hand
+        //
     }
 
     public void InitiateExperiment()
@@ -148,7 +189,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("current scenario is: " + currentScenario + ". with the interaction method: " + currentInteractionMethod);
 
-        if(currentScenario == Scenario.competitive)
+        if (currentScenario == Scenario.competitive)
         {
             //start competetive scenario
             competitionManager.StartCompetition(currentInteractionMethod);
@@ -166,7 +207,7 @@ public class GameManager : MonoBehaviour
     {
         string questionnaireAnswers = string.Join(";", answers);
         logger.Log(GetTimeStamp() + ";" + playerName + ";" + currentScenario + ";" + currentInteractionMethod + ";"
-                         + thrownProjectiles + ";" + ProjectilesOnTarget + ";" + points + ";" + (accuracy/ProjectilesOnTarget) + ";" + questionnaireAnswers);
+                         + thrownProjectiles + ";" + ProjectilesOnTarget + ";" + points + ";" + (accuracy / ProjectilesOnTarget) + ";" + questionnaireAnswers);
         answers.Clear();
         points = 0;
         accuracy = 0;
@@ -185,12 +226,16 @@ public class GameManager : MonoBehaviour
         if (rightHanded)
         {
             rightHand.enhancedMultiplyer = defaultThrowMultiplyer;
-            leftHand.GetComponent<Pointer>().enabled = true;
+            leftHand.GetComponent<Pointer>().isLaserHand = true;
+            mainHand = rightHand.gameObject.GetComponent<Pointer>();
+            offHand = leftHand.gameObject.GetComponent<Pointer>();
         }
         else
         {
             leftHand.enhancedMultiplyer = defaultThrowMultiplyer;
-            rightHand.GetComponent<Pointer>().enabled = true;
+            rightHand.GetComponent<Pointer>().isLaserHand = true;
+            mainHand = leftHand.gameObject.GetComponent<Pointer>();
+            offHand = rightHand.gameObject.GetComponent<Pointer>();
         }
 
     }

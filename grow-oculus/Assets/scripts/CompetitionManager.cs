@@ -42,6 +42,7 @@ public class CompetitionManager : MonoBehaviour
             //set handmodel to magical glove
             gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+            Debug.Log("activating laser because we are doing magic========");
             Pointer.activateLaser = true;
         }
         competitors.Add(new Competitor(gm.playerName));
@@ -77,6 +78,7 @@ public class CompetitionManager : MonoBehaviour
 
         gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
         gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+        Pointer.activateLaser = false;
 
         gm.qm.StartQuestionnaireMode();
     }

@@ -56,7 +56,7 @@ public class Projectile : MonoBehaviour
 
     public void HideProjectile()
     {
-        foreach(MeshRenderer mr in meshRenderers)
+        foreach (MeshRenderer mr in meshRenderers)
         {
             mr.enabled = false;
             attractor.enabled = false;
@@ -75,7 +75,7 @@ public class Projectile : MonoBehaviour
         {
             if (!grabbable.isGrabbed && isArmed && col.collider.gameObject.layer == 10)
             {
-                if(!spawnForQuestionnaire)
+                if (!spawnForQuestionnaire)
                 {
 
                     //if the hit object is target, register the hit
@@ -118,14 +118,15 @@ public class Projectile : MonoBehaviour
                         //kill the blackhole if it is the right circumstance
                         if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
                         {
-                            gm.blackHole.GetComponent<Attractor>().doAttract = false;
-                            gm.blackHole.GetComponent<Attractor>().StopVisuals();
                             AdJustParticleSystem.Collapse();
                         }
                     }
                     gm.thrownProjectiles++;
                     //ProjectileLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed));
                 }
+
+                gm.mainHand.SetLaserStage(LaserStages.setBlackHole); 
+                gm.offHand.SetLaserStage(LaserStages.setBlackHole);
 
                 isBeforeImpact = false;
                 rb.useGravity = false;

@@ -5,7 +5,7 @@ public class Pointer : MonoBehaviour
     public GameManager gm;
     public LineRenderer lineRenderer;
 
-    public float defaultLength = 50f;
+    public float defaultLength = 1f;
 
     // Should be OVRInput.Controller.LTouch or OVRInput.Controller.RTouch.
     [SerializeField]
@@ -18,6 +18,10 @@ public class Pointer : MonoBehaviour
     public float grabEnd = 0.35f;
 
     public bool lasering;
+    public bool isLaserHand;
+    public static bool activateLaser = false;
+
+    public LaserStages stage = LaserStages.setBlackHole;
 
     public Vector3 blackHoleOffset = new Vector3(0f, 0f, -0.2f);
 
@@ -34,18 +38,17 @@ public class Pointer : MonoBehaviour
         m_controller = gameObject.GetComponent<OVRGrabber>().m_controller;
     }
 
-    public static bool activateLaser = false;
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (activateLaser)
+        if (gm.currentInteractionMethod == InteractionMethod.magical && isLaserHand)
         {
-            activateLaser = false;
-            lineRenderer.enabled = true;
-        }
-        if (gm.currentInteractionMethod == InteractionMethod.magical)
-        {
+            if (activateLaser)
+            {
+                activateLaser = false;
+                lineRenderer.enabled = true;
+            }
             UpdateLength();
             float prevFlex = m_prevFlex;
             // Update values from inputs
@@ -57,24 +60,34 @@ public class Pointer : MonoBehaviour
 
     void CheckForGrabOrRelease(float prevFlex)
     {
-        if (m_prevFlex >= grabBegin)
+        //Grab Begin
+        if ((m_prevFlex >= grabBegin) && (prevFlex < grabBegin))
         {
-            if (!AdJustParticleSystem.isBlackHoleOpen && !Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("Projectile")))
+            //if we grab and the black hole is not set yet
+            if (!AdJustParticleSystem.isBlackHoleOpen &&
+                stage == LaserStages.setBlackHole)
             {
                 lineRenderer.enabled = false;
                 if (Vector3.Distance(endPos, Vector3.zero) > 4f)
                 {
                     SpawnBlackHole();
                 }
+                stage = LaserStages.enhanceAndThrow;
             }
         }
-        else if ((m_prevFlex <= grabEnd) && (prevFlex > grabEnd))
-        {
-            if (!Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("Projectile")))
-            {
-                lineRenderer.enabled = true;
-            }
-        }
+        ////Grab End
+        //else if ((m_prevFlex <= grabEnd) && (prevFlex > grabEnd))
+        //{
+        //    if (!Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("Projectile")))
+        //    {
+        //        lineRenderer.enabled = true;
+        //    }
+        //}
+    }
+
+    public void SetLaserStage(LaserStages stage)
+    {
+        this.stage = stage;
     }
 
     public void SpawnBlackHole()
@@ -121,5 +134,11 @@ public class Pointer : MonoBehaviour
     {
         return transform.position + (transform.forward * length);
     }
+}
+
+public enum LaserStages
+{
+    setBlackHole = 0,
+    enhanceAndThrow= 1,
 }
 
