@@ -36,21 +36,29 @@ public class GameManager : MonoBehaviour
 
     //participantID 
     [Space(20)]
+    [HideInInspector]
     public string playerName;
+
+    public string visiblePlayerName;
 
     //Count up for each participant.
     public int playerNumber;
+    [HideInInspector]
     public bool rightHanded;
+    public bool visibleRightHanded;
 
     public float enhancedThrowMultiplyer = 5f;
     public float defaultThrowMultiplyer = 2f;
 
+    //do we need a story for this participant
     public bool storyTime;
 
     public int interactionLS;
     public int scenarioLS;
 
     private bool firstCondition = true;
+    public bool isAudioPlaying = false;
+    public bool isConditionStarted = false;
 
     [HideInInspector]
     public Scenario currentScenario;
@@ -123,6 +131,7 @@ public class GameManager : MonoBehaviour
                 scale = twisterDeviation;
             }
             scale /= twisterDeviation;
+            //Debug.Log("========================supersize me:" + scale.ToString("F7"));
             //Debug.Log("Scale: " + scale + " Velocity: " + velocity);
             lastPos = mainHand.transform.position;
 
@@ -258,13 +267,14 @@ public enum InteractionMethod
 {
     normal = 0,
     enhanced = 1,
-    magical = 2
+    magical = 2,
 };
 
 public enum Scenario
 {
     exploratory = 0,
-    competitive = 1
+    competitive = 1, 
+    end = 2
 };
 
 public enum BlackHoleStatus

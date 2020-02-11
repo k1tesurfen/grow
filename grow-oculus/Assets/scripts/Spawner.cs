@@ -81,6 +81,23 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    //for manually adding Projectiles to the spawners
+    public void ForceSpawnProjectile(Vector3 position, Quaternion rotation)
+    {
+        projectile = Instantiate(spawnObject, position, rotation, transform);
+        projectile.GetComponent<Projectile>().gm = gm;
+        projectile.GetComponent<Projectile>().projectileLogger = projectileLogger;
+        projectile.GetComponent<Projectile>().grabbable = projectile.GetComponent<OVRGrabbable>();
+        projectile.GetComponent<Projectile>().rb = projectile.GetComponent<Rigidbody>();
+        projectile.GetComponent<Rigidbody>().useGravity = true;
+        projectile.GetComponent<Projectile>().isArmed = true;
+
+        if (!spawnForQuestionnaire)
+        {
+            spawnedProjectiles.Add(projectile);
+        }
+    }
+
     //hide all Projectiles, this spawner has produced. it should be only one Projectile.
     public void HideProjectiles()
     {
@@ -94,9 +111,9 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            foreach(Transform p in transform)
+            foreach (Transform p in transform)
             {
-                if(p.gameObject.GetComponent<Projectile>() != null)
+                if (p.gameObject.GetComponent<Projectile>() != null)
                 {
                     p.gameObject.GetComponent<Projectile>().HideProjectile();
                 }
@@ -117,9 +134,9 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            foreach(Transform p in transform)
+            foreach (Transform p in transform)
             {
-                if(p.gameObject.GetComponent<Projectile>() != null)
+                if (p.gameObject.GetComponent<Projectile>() != null)
                 {
                     p.gameObject.GetComponent<Projectile>().DestroyProjectile();
                 }

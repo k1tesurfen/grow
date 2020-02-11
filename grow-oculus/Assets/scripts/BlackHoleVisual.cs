@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BlackHoleVisual : MonoBehaviour
@@ -7,10 +6,17 @@ public class BlackHoleVisual : MonoBehaviour
     public ParticleSystem init;
     public ParticleSystem loop;
 
-    private void OnEnable()
+    public void StartVisuals()
     {
+        StopVisuals();
         init.Play();
         StartCoroutine(JanDelay(0.2f));
+    }
+
+    public void StopVisuals()
+    {
+        init.Stop();
+        loop.Stop();
     }
 
     IEnumerator JanDelay(float time)

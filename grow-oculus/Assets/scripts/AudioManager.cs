@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Audio;
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
@@ -28,4 +29,20 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
+    public void Play(string[] name)
+    {
+        float length = 0f;
+        foreach(string s in name)
+        {
+            Sound clip = Array.Find(sounds, sound => sound.name == s);
+            StartCoroutine(JanDelay(length, clip));
+            length += clip.source.clip.length + 2f;
+        } 
+    }
+
+    IEnumerator JanDelay(float time, Sound s)
+    {
+        yield return new WaitForSeconds(time);
+        s.source.Play();
+    }
 }

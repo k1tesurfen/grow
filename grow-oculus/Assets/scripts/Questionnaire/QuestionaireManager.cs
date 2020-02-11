@@ -21,7 +21,7 @@ public class QuestionaireManager : MonoBehaviour
         spawnPlatform.GetComponent<Spawner>().ClearProjectiles();
         questionnaireToDo = 0;
         questionnaireMode = true;
-        StartCoroutine(JanDelay(1f));
+        StartCoroutine(JanDelay(1f, false));
     }
 
 
@@ -33,8 +33,7 @@ public class QuestionaireManager : MonoBehaviour
         spawnPlatform.SetActive(false);
         spawnPlatform.GetComponent<Spawner>().HideProjectiles() ;
         undoButton.SetActive(false);
-        questionnaireMode = false;
-        StartCoroutine(JanDelay(1f));
+        StartCoroutine(JanDelay(1f, true));
     }
 
     public void AbortQuestionnaireMode()
@@ -61,10 +60,10 @@ public class QuestionaireManager : MonoBehaviour
         questionnaireToDo++;
     }
 
-    IEnumerator JanDelay(float time)
+    IEnumerator JanDelay(float time, bool isEnd)
     {
         yield return new WaitForSeconds(time);
-        if (questionnaireMode)
+        if (!isEnd)
         {
             spawnPlatform.SetActive(true);
             spawnPlatform.GetComponent<Spawner>().SpawnProjectile();
@@ -73,6 +72,7 @@ public class QuestionaireManager : MonoBehaviour
         }
         else
         {
+            questionnaireMode = false;
             gm.NextCondition();
         }
     }

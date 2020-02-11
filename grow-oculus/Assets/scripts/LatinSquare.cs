@@ -16,24 +16,49 @@ public class LatinSquare : MonoBehaviour
     //returns the scenario the player must play(competetive/explorative).
     public Scenario GetScenario()
     {
-        if (interactionIndex > 2)
-        {
-            scenarioIndex++;
-            interactionIndex = 0;
-        }
         Scenario ret = (Scenario)latinSquareScenario[gm.scenarioLS, scenarioIndex];
+        scenarioIndex++;
+        if(interactionIndex == 2 && scenarioIndex > 1)
+        {
+            finished = true;
+        }
         return ret;
     }
-    
+
     //returns the interaction method the player has to play.
     public InteractionMethod GetInteractionMethod()
     {
-        InteractionMethod ret = (InteractionMethod)latinSquareInteraction[gm.interactionLS, interactionIndex];
-        interactionIndex++;
-        if(scenarioIndex == 1 && interactionIndex > 2)
+        if(scenarioIndex > 1)
         {
-            finished = true; 
+            interactionIndex++;
+            scenarioIndex = 0;
+            //@TODO set audio here.
         }
+        InteractionMethod ret = (InteractionMethod)latinSquareInteraction[gm.interactionLS, interactionIndex];
         return ret;
     }
+
+    ////returns the scenario the player must play(competetive/explorative).
+    //public Scenario GetScenario()
+    //{
+    //    if (interactionIndex > 2)
+    //    {
+    //        scenarioIndex++;
+    //        interactionIndex = 0;
+    //    }
+    //    Scenario ret = (Scenario)latinSquareScenario[gm.scenarioLS, scenarioIndex];
+    //    return ret;
+    //}
+
+    ////returns the interaction method the player has to play.
+    //public InteractionMethod GetInteractionMethod()
+    //{
+    //    InteractionMethod ret = (InteractionMethod)latinSquareInteraction[gm.interactionLS, interactionIndex];
+    //    interactionIndex++;
+    //    if(scenarioIndex == 1 && interactionIndex > 2)
+    //    {
+    //        finished = true; 
+    //    }
+    //    return ret;
+    //}
 }

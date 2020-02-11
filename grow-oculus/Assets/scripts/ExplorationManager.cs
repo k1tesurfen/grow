@@ -55,8 +55,14 @@ public class ExplorationManager : MonoBehaviour
 
         if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
         {
-            gm.blackHole.GetComponent<Attractor>().doAttract = false;
-            gm.blackHole.GetComponent<Attractor>().StopVisuals();
+            //make linerenderer and particlesystem disappear after condition
+            gm.mainHand.GetComponent<Pointer>().lineRenderer.enabled = false;
+            gm.mainHand.GetComponent<Pointer>().ray.transform.position = new Vector3(0, -100, 0);
+            gm.mainHand.GetComponent<Pointer>().ray.Stop();
+            gm.offHand.GetComponent<Pointer>().lineRenderer.enabled = false;
+            gm.offHand.GetComponent<Pointer>().ray.transform.position = new Vector3(0, -100, 0);
+            gm.offHand.GetComponent<Pointer>().ray.Stop();
+
             AdJustParticleSystem.Collapse();
         }
 

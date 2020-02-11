@@ -122,7 +122,7 @@ public class Projectile : MonoBehaviour
                         }
                     }
                     gm.thrownProjectiles++;
-                    //ProjectileLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed));
+                    projectileLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed));
                 }
 
                 gm.mainHand.SetLaserStage(LaserStages.setBlackHole); 

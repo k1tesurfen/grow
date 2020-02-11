@@ -21,7 +21,9 @@ public class Pointer : MonoBehaviour
     public bool isLaserHand;
     public static bool activateLaser = false;
 
-    public LaserStages stage = LaserStages.setBlackHole;
+    public LaserStages stage = LaserStages.idle;
+
+    public ParticleSystem ray;
 
     public Vector3 blackHoleOffset = new Vector3(0f, 0f, -0.2f);
 
@@ -38,16 +40,25 @@ public class Pointer : MonoBehaviour
         m_controller = gameObject.GetComponent<OVRGrabber>().m_controller;
     }
 
+    public void HideVisuals()
+    {
+        lineRenderer.enabled = false;
+        ray.Stop();
+        ray.transform.position = new Vector3(0, -100, 0);
+    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (gm.currentInteractionMethod == InteractionMethod.magical && isLaserHand)
+        if (gm.currentInteractionMethod == InteractionMethod.magical && isLaserHand && !gm.qm.questionnaireMode)
         {
             if (activateLaser)
             {
                 activateLaser = false;
                 lineRenderer.enabled = true;
+                ray.transform.position = transform.position + (0.1f * transform.forward);
+                ray.transform.rotation = transform.rotation;
+                ray.Play();
             }
             UpdateLength();
             float prevFlex = m_prevFlex;
@@ -61,28 +72,19 @@ public class Pointer : MonoBehaviour
     void CheckForGrabOrRelease(float prevFlex)
     {
         //Grab Begin
-        if ((m_prevFlex >= grabBegin) && (prevFlex < grabBegin))
+        if ((m_prevFlex >= grabBegin) && (prevFlex < grabBegin) && !gm.qm.questionnaireMode)
         {
             //if we grab and the black hole is not set yet
             if (!AdJustParticleSystem.isBlackHoleOpen &&
                 stage == LaserStages.setBlackHole)
             {
                 lineRenderer.enabled = false;
-                if (Vector3.Distance(endPos, Vector3.zero) > 4f)
-                {
-                    SpawnBlackHole();
-                }
+                ray.transform.position = new Vector3(0, -100, 0);
+                ray.Stop();
+                SpawnBlackHole();
                 stage = LaserStages.enhanceAndThrow;
             }
         }
-        ////Grab End
-        //else if ((m_prevFlex <= grabEnd) && (prevFlex > grabEnd))
-        //{
-        //    if (!Physics.CheckSphere(transform.position, 0.14f, LayerMask.GetMask("Projectile")))
-        //    {
-        //        lineRenderer.enabled = true;
-        //    }
-        //}
     }
 
     public void SetLaserStage(LaserStages stage)
@@ -93,7 +95,7 @@ public class Pointer : MonoBehaviour
     public void SpawnBlackHole()
     {
         Debug.Log("Setting Blackhole");
-        gm.blackHole.transform.position = endPos + blackHoleOffset;
+        gm.blackHole.transform.position = endPos;
         gm.blackHole.GetComponent<Attractor>().doAttract = true;
         gm.blackHole.GetComponent<Attractor>().StartVisuals();
         AdJustParticleSystem.Respawn();
@@ -138,7 +140,8 @@ public class Pointer : MonoBehaviour
 
 public enum LaserStages
 {
-    setBlackHole = 0,
-    enhanceAndThrow= 1,
+    idle = 0,
+    setBlackHole = 1,
+    enhanceAndThrow = 2,
 }
 

@@ -8,7 +8,7 @@ public class Attractor : MonoBehaviour
     const float G = 66.74f;
 
 
-    public int mass { get { return (int)AdJustParticleSystem.Size * 20; } }
+    public int mass { get { return (int)AdJustParticleSystem.Size * 10; } }
     public static List<Attractor> Attractables;
     public bool isAttractor = false;
 
@@ -54,12 +54,12 @@ public class Attractor : MonoBehaviour
 
     public void StartVisuals()
     {
-        particles.SetActive(true);
+        particles.GetComponent<BlackHoleVisual>().StartVisuals();
     }
 
     public void StopVisuals()
     {
-        particles.SetActive(false);
+        particles.GetComponent<BlackHoleVisual>().StopVisuals();
     }
 
     void OnDisable()
@@ -81,7 +81,7 @@ public class Attractor : MonoBehaviour
         Vector3 direction = transform.position - objToAttract.transform.position;
         float distance = direction.magnitude;
 
-        if (distance < 0.3f)
+        if (distance < 0.4f)
         {
             return;
         }

@@ -15,6 +15,13 @@ public class CompetitionManager : MonoBehaviour
     public TextMeshPro timerLabel;
     public string[] competitorNames;
 
+    public string[] audioNormalStory;
+    public string[] audioEnhancedStory;
+    public string[] audioMagicStory;
+
+    public string[] audioNormal;
+    public string[] audioEnhanced;
+    public string[] audioMagic;
 
     public void StartCompetition(InteractionMethod im)
     {
@@ -30,12 +37,28 @@ public class CompetitionManager : MonoBehaviour
             //set handmodel to exoskeleton
             gm.leftHand.enhancedMultiplyer = gm.enhancedThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.enhancedThrowMultiplyer;
+            if (gm.storyTime)
+            {
+                
+            }
+            else
+            {
+
+            }
         }
-        else if(im == InteractionMethod.normal)
+        else if (im == InteractionMethod.normal)
         {
             //set handmodel to normal glove
             gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
+            if (gm.storyTime)
+            {
+
+            }
+            else
+            {
+
+            }
         }
         else
         {
@@ -44,13 +67,30 @@ public class CompetitionManager : MonoBehaviour
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             Debug.Log("activating laser because we are doing magic========");
             Pointer.activateLaser = true;
+            if (gm.storyTime)
+            {
+
+            }
+            else
+            {
+
+            }
         }
-        competitors.Add(new Competitor(gm.playerName));
+        competitors.Add(new Competitor("YOU"));
         gm.pm.Repopulate();
         gm.target.gameObject.SetActive(true);
+
+        if (true)
+        {
+            gm.mainHand.SetLaserStage(LaserStages.setBlackHole);
+            gm.offHand.SetLaserStage(LaserStages.setBlackHole);
+        }
+
         UpdateLeaderBoard();
         StartCoroutine("Countdown", gm.timeInScenario);
     }
+
+
 
     public void EndCompetition()
     {
@@ -59,11 +99,10 @@ public class CompetitionManager : MonoBehaviour
 
         //@TODO: set handmodel to default again
 
-        if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
+        if (gm.currentInteractionMethod == InteractionMethod.magical)
         {
-            gm.blackHole.GetComponent<Attractor>().doAttract = false;
-            gm.blackHole.GetComponent<Attractor>().StopVisuals();
-            gm.blackHole.transform.position = new Vector3(0f, -10f, 0f);
+            gm.mainHand.GetComponent<Pointer>().HideVisuals();
+            gm.offHand.GetComponent<Pointer>().HideVisuals();
             AdJustParticleSystem.Collapse();
         }
 
@@ -87,12 +126,12 @@ public class CompetitionManager : MonoBehaviour
     {
         foreach (Competitor competitor in competitors)
         {
-            if (competitor.name == gm.playerName)
+            if (competitor.name == "YOU")
             {
                 competitor.score = gm.points;
             }
 
-            if (competitor.name != gm.playerName)
+            if (competitor.name != "YOU")
             {
                 StartCoroutine(JanDelayScoreUpdate(competitor.name));
             }
@@ -112,7 +151,7 @@ public class CompetitionManager : MonoBehaviour
 
         if (competitor != null)
         {
-            competitor.score += Random.Range(0, 2) * 25;
+            competitor.score += Random.Range(0, 4) * 25;
         }
 
         competitors.Sort();

@@ -39,7 +39,7 @@ public class AdJustParticleSystem : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (size < 0f)
+        if (size < 0f && isBlackHoleOpen)
         {
             Collapse();
             return;
@@ -54,6 +54,7 @@ public class AdJustParticleSystem : MonoBehaviour
             transform.localScale = new Vector3(2, 2, 2);
         }
         //achtung kein plan ob iscollapsing da so rein darf
+        //wenn blackhole nicht kollabiert oder nicht zu groß dann adde size
         if (!(size > 1f || isCollapsing))
         {
             size += Time.fixedDeltaTime / 1f * GameManager.Scale;
@@ -71,19 +72,19 @@ public class AdJustParticleSystem : MonoBehaviour
     {
         startTime = Time.time;
         size = 0f;
-        instance.transform.parent.parent.GetComponent<Attractor>().doAttract = true;
-        instance.transform.parent.GetComponent<BlackHoleVisual>().enabled = true;
+        //instance.transform.parent.parent.GetComponent<Attractor>().doAttract = true;
+        //instance.transform.parent.GetComponent<BlackHoleVisual>().enabled = true;
         isCollapsing = false;
         isBlackHoleOpen = true;
     }
 
     public static void Collapse()
     {
-
         isBlackHoleOpen = false;
         instance.transform.parent.parent.position = new Vector3(0, -200f, 0);
         instance.transform.parent.parent.GetComponent<Attractor>().doAttract = false;
         Pointer.activateLaser = true;
-        instance.transform.parent.GetComponent<BlackHoleVisual>().enabled = false;
+        instance.transform.parent.GetComponent<BlackHoleVisual>().StopVisuals();
+        Debug.Log("The blackhole is collapsing!");
     }
 }
