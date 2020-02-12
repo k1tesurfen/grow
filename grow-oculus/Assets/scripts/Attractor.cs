@@ -14,7 +14,7 @@ public class Attractor : MonoBehaviour
 
     //should the obToAttract be attracted or not
     public bool doAttract = false;
-    private float lifeSpan = 7f;
+    public float lifeSpan = 7f;
 
     [Range(0f, 15f)]
     public float attractionRadius;

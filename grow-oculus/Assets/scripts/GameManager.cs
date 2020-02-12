@@ -165,8 +165,9 @@ public class GameManager : MonoBehaviour
             {
                 Pointer.activateLaser = false;
                 offHand.GetComponent<Pointer>().HideVisuals();
-                testThrowsLabel.text = "Good luck and have fun!";
+                testThrowsLabel.text = "After the audio stops, press the right index trigger to start. Good luck and have fun!";
                 pm.ClearProjectiles();
+                blackHole.GetComponent<Attractor>().lifeSpan = 7f;
                 //wenn ein trigger getriggert wird und kein audio spielt brechen wir die while ab
                 if (((OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, h1) > 0.55f && !audioManager.isAudioPlaying) ||
                         (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, h2) > 0.55f && !audioManager.isAudioPlaying)))
@@ -259,6 +260,7 @@ public class GameManager : MonoBehaviour
 
         pm.Repopulate();
         testThrowsLabel.gameObject.SetActive(true);
+        blackHole.GetComponent<Attractor>().lifeSpan = 20f;
 
         //Debug.Log("current scenario is: " + currentScenario + ". with the interaction method: " + currentInteractionMethod);
         isWaitingForCondition = true;

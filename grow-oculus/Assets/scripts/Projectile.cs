@@ -96,7 +96,7 @@ public class Projectile : MonoBehaviour
                 {
                     //if the hit object is target, register the hit
                     if (col.collider.transform.gameObject.name
-                        == "Target" && isBeforeImpact)
+                        == "Target" && isBeforeImpact && !gm.isWaitingForCondition)
                     {
                         //gm.target.RegisterHit(col.GetContact(0).point);
 

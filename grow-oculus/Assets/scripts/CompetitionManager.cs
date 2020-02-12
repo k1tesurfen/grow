@@ -56,11 +56,8 @@ public class CompetitionManager : MonoBehaviour
         gm.pm.Repopulate();
         //gm.target.gameObject.SetActive(true);
 
-        if (true)
-        {
-            gm.mainHand.SetLaserStage(LaserStages.setBlackHole);
-            gm.offHand.SetLaserStage(LaserStages.setBlackHole);
-        }
+        gm.mainHand.SetLaserStage(LaserStages.setBlackHole);
+        gm.offHand.SetLaserStage(LaserStages.setBlackHole);
 
         UpdateLeaderBoard();
         StartCoroutine("Countdown", gm.timeInScenario);
