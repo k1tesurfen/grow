@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,7 +13,6 @@ public class GameManager : MonoBehaviour
     public LatinSquare latinSquare;
     public CompetitionManager competitionManager;
     public ExplorationManager explorationManager;
-    public GameObject hand;
     public QuestionaireManager qm;
     public FortressManager fm;
     public ProjectileManager pm;
@@ -21,12 +21,17 @@ public class GameManager : MonoBehaviour
     public GameObject endScreen;
     public OVRGrabber leftHand;
     public OVRGrabber rightHand;
-    public Pointer mainHand;
-    public Pointer offHand;
+    public AudioManager audioManager;
+    public TextMeshPro testThrowsLabel;
 
     private static float scale;
     public static float Scale { get { return scale; } }
 
+    public Pointer mainHand;
+    public Pointer offHand;
+
+    OVRInput.Controller h1;
+    OVRInput.Controller h2;
 
     public Vector3 lastPos;
     public List<float> lastVelocities = new List<float>();
@@ -48,7 +53,7 @@ public class GameManager : MonoBehaviour
     public bool visibleRightHanded;
 
     public float enhancedThrowMultiplyer = 5f;
-    public float defaultThrowMultiplyer = 2f;
+    public float defaultThrowMultiplyer = 1.8f;
 
     //do we need a story for this participant
     public bool storyTime;
@@ -56,9 +61,14 @@ public class GameManager : MonoBehaviour
     public int interactionLS;
     public int scenarioLS;
 
+    public bool customStart = false;
+    public int customInteraction;
+    public int customScenario;
+
     private bool firstCondition = true;
-    public bool isAudioPlaying = false;
     public bool isConditionStarted = false;
+    public bool isWaitingForCondition = false;
+    public int numTestThrows = 3;
 
     [HideInInspector]
     public Scenario currentScenario;
@@ -100,7 +110,14 @@ public class GameManager : MonoBehaviour
     {
         //competition.StartGame();
         //competition.UpdateLeaderBoard(25);
-        InitiateExperiment();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            InitiateExperiment();
+        }
     }
 
     public void FixedUpdate()
@@ -122,7 +139,7 @@ public class GameManager : MonoBehaviour
 
             velocity /= lastVelocities.Count;
             scale = velocity - defaultTwister;
-            if(scale < 0)
+            if (scale < 0)
             {
                 scale = 0;
             }
@@ -131,40 +148,45 @@ public class GameManager : MonoBehaviour
                 scale = twisterDeviation;
             }
             scale /= twisterDeviation;
-            //Debug.Log("========================supersize me:" + scale.ToString("F7"));
-            //Debug.Log("Scale: " + scale + " Velocity: " + velocity);
             lastPos = mainHand.transform.position;
-
-            //if (lastPos != null)
-            //{
-            //    lastVelocities.Add(Vector3.Distance(mainHand.transform.position, lastPos) / Time.fixedDeltaTime);
-            //    while (lastVelocities.Count >= 15)
-            //    {
-            //        lastVelocities.RemoveAt(0);
-            //    }
-            //}
-            //float velocity = lastVelocities.Sum();
-
-            //velocity /= lastVelocities.Count;
-            //scale = Mathf.Abs(velocity - defaultTwister);
-            //scale = velocity - defaultTwister;
-            ////scale has to be between defaulttwister and max(default+deviation)
-            //if (scale < defaultTwister)
-            //{
-            //    scale = 0;
-            //}
-            //if(scale > defaultTwister + twisterDeviation)
-            //{
-            //    scale = twisterDeviation;
-            //}
-            //scale /= twisterDeviation;
-            //scale = 1 - scale;
-            ////Debug.Log("Scale: " + scale + " Velocity: " + velocity);
-            //lastPos = mainHand.transform.position;
         }
         //
         // END Twistermovement of the hand
         //
+        if (isWaitingForCondition)
+        {
+
+            if (numTestThrows > 0)
+            {
+                testThrowsLabel.text = numTestThrows + " test-throws left.";
+            }
+
+            if (numTestThrows <= 0)
+            {
+                Pointer.activateLaser = false;
+                offHand.GetComponent<Pointer>().HideVisuals();
+                testThrowsLabel.text = "Good luck and have fun!";
+                pm.ClearProjectiles();
+                //wenn ein trigger getriggert wird und kein audio spielt brechen wir die while ab
+                if (((OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, h1) > 0.55f && !audioManager.isAudioPlaying) ||
+                        (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, h2) > 0.55f && !audioManager.isAudioPlaying)))
+                {
+                    if (currentScenario == Scenario.competitive)
+                    {
+                        //start competetive scenario
+                        competitionManager.StartCompetition(currentInteractionMethod);
+                    }
+                    else
+                    {
+                        //start exploratory scenario
+                        explorationManager.StartExploration(currentInteractionMethod);
+                    }
+                    testThrowsLabel.gameObject.SetActive(false);
+                    isWaitingForCondition = false;
+                }
+            }
+        }
+
     }
 
     public void InitiateExperiment()
@@ -186,6 +208,8 @@ public class GameManager : MonoBehaviour
             firstCondition = false;
         }
 
+        target.gameObject.SetActive(true);
+
         //check if the experiment has already finished
         if (latinSquare.finished)
         {
@@ -193,21 +217,51 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        currentScenario = latinSquare.GetScenario();
+        if (customStart)
+        {
+            latinSquare.interactionIndex = customInteraction;
+            latinSquare.scenarioIndex = customScenario;
+        }
         currentInteractionMethod = latinSquare.GetInteractionMethod();
-
-        Debug.Log("current scenario is: " + currentScenario + ". with the interaction method: " + currentInteractionMethod);
+        currentScenario = latinSquare.GetScenario();
 
         if (currentScenario == Scenario.competitive)
         {
-            //start competetive scenario
-            competitionManager.StartCompetition(currentInteractionMethod);
+            audioManager.AddToQueue("competition");
         }
         else
         {
-            //start exploratory scenario
-            explorationManager.StartExploration(currentInteractionMethod);
+            audioManager.AddToQueue("exploration");
         }
+
+        if (currentInteractionMethod == InteractionMethod.enhanced)
+        {
+            //set handmodel to exoskeleton
+            leftHand.enhancedMultiplyer = enhancedThrowMultiplyer;
+            rightHand.enhancedMultiplyer = enhancedThrowMultiplyer;
+        }
+        else if (currentInteractionMethod == InteractionMethod.normal)
+        {
+            //set handmodel to normal glove
+            leftHand.enhancedMultiplyer = defaultThrowMultiplyer;
+            rightHand.enhancedMultiplyer = defaultThrowMultiplyer;
+        }
+        else
+        {
+            //set handmodel to magical glove
+            leftHand.enhancedMultiplyer = defaultThrowMultiplyer;
+            rightHand.enhancedMultiplyer = defaultThrowMultiplyer;
+            mainHand.SetLaserStage(LaserStages.setBlackHole);
+            offHand.SetLaserStage(LaserStages.setBlackHole);
+            Debug.Log("activating laser for testthrows");
+            Pointer.activateLaser = true;
+        }
+
+        pm.Repopulate();
+        testThrowsLabel.gameObject.SetActive(true);
+
+        //Debug.Log("current scenario is: " + currentScenario + ". with the interaction method: " + currentInteractionMethod);
+        isWaitingForCondition = true;
     }
 
     //log data from current condition
@@ -247,6 +301,8 @@ public class GameManager : MonoBehaviour
             offHand = rightHand.gameObject.GetComponent<Pointer>();
         }
 
+        h1 = mainHand.GetComponent<OVRGrabber>().m_controller;
+        h2 = offHand.GetComponent<OVRGrabber>().m_controller;
     }
 
     public void EndExperiment()
@@ -273,7 +329,7 @@ public enum InteractionMethod
 public enum Scenario
 {
     exploratory = 0,
-    competitive = 1, 
+    competitive = 1,
     end = 2
 };
 

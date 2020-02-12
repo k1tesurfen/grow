@@ -21,12 +21,24 @@ public class Projectile : MonoBehaviour
     public bool isArmed = false;
     public bool isBeforeImpact = true;
 
+    public bool inAnimation = false;
+    public Vector3 localPosition = new Vector3(0, 0, 0);
+
     [HideInInspector]
     public float maxSpeed;
 
     public Rigidbody rb;
 
     public MeshRenderer[] meshRenderers;
+
+    private void Update()
+    {
+        if (inAnimation)
+        {
+            Debug.Log(transform.localPosition);
+            transform.localPosition = localPosition;
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -63,6 +75,11 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    public void HideOnTarget()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void DestroyProjectile()
     {
         Destroy(gameObject);
@@ -77,7 +94,6 @@ public class Projectile : MonoBehaviour
             {
                 if (!spawnForQuestionnaire)
                 {
-
                     //if the hit object is target, register the hit
                     if (col.collider.transform.gameObject.name
                         == "Target" && isBeforeImpact)
@@ -88,55 +104,65 @@ public class Projectile : MonoBehaviour
                         gm.accuracy += deviation;
                         gm.ProjectilesOnTarget++;
 
-                        if (deviation < 0.675f)
+                        if (deviation < 0.4f)
                         {
-                            Debug.Log("=================100p");
+                            //Debug.Log("=================100p");
                             gm.points += 100;
                         }
-                        else if (deviation < 1.867f)
+                        else if (deviation < 1.1f)
                         {
                             gm.points += 75;
-                            Debug.Log("=================75p");
+                            //Debug.Log("=================75p");
                         }
-                        else if (deviation < 3.029f)
+                        else if (deviation < 1.8f)
                         {
                             gm.points += 50;
-                            Debug.Log("=================50p");
+                            //Debug.Log("=================50p");
                         }
-                        else if (deviation < 4f)
+                        else if (deviation < 2.35f)
                         {
-                            Debug.Log("=================25p");
+                            //Debug.Log("=================25p");
                             gm.points += 25;
                         }
                         else
                         {
-                            Debug.Log("=================0p");
+                            //Debug.Log("=================0p");
                             gm.points += 0;
                         }
                         gm.competitionManager.UpdateLeaderBoard();
 
-                        //kill the blackhole if it is the right circumstance
-                        if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
-                        {
-                            AdJustParticleSystem.Collapse();
-                        }
+                        attractor.doAttract = false;
+
                     }
+
+                    //kill the blackhole if the matching dart is broken.
+                    if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
+                    {
+                        AdJustParticleSystem.Collapse();
+                    }
+
                     gm.thrownProjectiles++;
-                    projectileLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed));
+                    projectileLogger.Log(gm.GetTimeStamp() + ";" + col.collider.gameObject.name + ";" + Mathf.Sqrt(maxSpeed) + ";" + transform.position.x + ";" + transform.position.y + ";" + transform.position.z);
                 }
 
-                gm.mainHand.SetLaserStage(LaserStages.setBlackHole); 
+                gm.mainHand.SetLaserStage(LaserStages.setBlackHole);
                 gm.offHand.SetLaserStage(LaserStages.setBlackHole);
 
                 isBeforeImpact = false;
                 rb.useGravity = false;
                 rb.isKinematic = true;
 
+                if (gm.isWaitingForCondition)
+                {
+                    gm.numTestThrows--;
+                }
+
                 if (spawnForQuestionnaire)
                 {
                     gm.scatter.Explode(col.GetContact(0).point);
                     DestroyProjectile();
                 }
+                StartCoroutine(JanDelay(3f));
             }
         }
     }
@@ -144,6 +170,6 @@ public class Projectile : MonoBehaviour
     IEnumerator JanDelay(float time)
     {
         yield return new WaitForSeconds(time);
-        DestroyProjectile();
+        HideOnTarget();
     }
 }

@@ -29,44 +29,44 @@ public class GameManagerEditor : Editor
         GUILayout.Space(10);
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("E1"))
+        if (GUILayout.Button("0E"))
         {
             gm.interactionLS = 0;
             gm.scenarioLS = 0;
-            gm.currentCondition = "E1";
+            gm.currentCondition = "0E";
         }
-        if (GUILayout.Button("E2"))
+        if (GUILayout.Button("1E"))
         {
             gm.interactionLS = 1;
             gm.scenarioLS = 0;
-            gm.currentCondition = "E2";
+            gm.currentCondition = "1E";
         }
-        if (GUILayout.Button("E3"))
+        if (GUILayout.Button("2E"))
         {
             gm.interactionLS = 2;
             gm.scenarioLS = 0;
-            gm.currentCondition = "E3";
+            gm.currentCondition = "2E";
         }
         GUILayout.EndHorizontal();
         GUILayout.Space(7);
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("C1"))
+        if (GUILayout.Button("0C"))
         {
             gm.interactionLS = 0;
             gm.scenarioLS = 1;
-            gm.currentCondition = "C1";
+            gm.currentCondition = "0C";
         }
-        if (GUILayout.Button("C2"))
+        if (GUILayout.Button("1C"))
         {
             gm.interactionLS = 1;
             gm.scenarioLS = 1;
-            gm.currentCondition = "C2";
+            gm.currentCondition = "1C";
         }
-        if (GUILayout.Button("C3"))
+        if (GUILayout.Button("2C"))
         {
             gm.interactionLS = 2;
             gm.scenarioLS = 1;
-            gm.currentCondition = "C3";
+            gm.currentCondition = "2C";
         }
         GUILayout.EndHorizontal();
         

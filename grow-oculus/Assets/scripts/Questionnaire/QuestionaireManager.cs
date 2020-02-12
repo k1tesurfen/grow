@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class QuestionaireManager : MonoBehaviour
@@ -13,6 +12,8 @@ public class QuestionaireManager : MonoBehaviour
     public GameObject undoButton;
 
     public bool questionnaireMode = false;
+
+    private bool isFirstTimeQuestionnaire = true;
 
     //prepare everything for the first questionnaire and start it.
     public void StartQuestionnaireMode()
@@ -31,8 +32,8 @@ public class QuestionaireManager : MonoBehaviour
         gm.pm.ClearProjectiles();
         gm.fm.ShowFortress();
         spawnPlatform.SetActive(false);
-        spawnPlatform.GetComponent<Spawner>().HideProjectiles() ;
-        undoButton.SetActive(false);
+        spawnPlatform.GetComponent<Spawner>().HideProjectiles();
+        undoButton.transform.parent.gameObject.SetActive(false);
         StartCoroutine(JanDelay(1f, true));
     }
 
@@ -65,16 +66,33 @@ public class QuestionaireManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         if (!isEnd)
         {
+            if (isFirstTimeQuestionnaire)
+            {
+                gm.audioManager.AddToQueue("questionnaire");
+                isFirstTimeQuestionnaire = false;
+            }
             spawnPlatform.SetActive(true);
             spawnPlatform.GetComponent<Spawner>().SpawnProjectile();
-            undoButton.SetActive(true);
-            StartNextQuestionaire();
+            undoButton.transform.parent.gameObject.SetActive(true);
+            StartCoroutine(SamyDeluxe(gm.audioManager.waitingTime));
         }
         else
         {
             questionnaireMode = false;
             gm.NextCondition();
         }
+    }
+
+    public void MakeUndubuttonSwitchable()
+    {
+        undoButton.GetComponent<UndoButton>().isSwitchable = true;
+    }
+
+    IEnumerator SamyDeluxe(float time)
+    {
+        yield return new WaitForSeconds(time);
+        MakeUndubuttonSwitchable();
+        StartNextQuestionaire();
     }
 
     public void OnDrawGizmos()

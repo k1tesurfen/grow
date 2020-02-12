@@ -37,28 +37,12 @@ public class CompetitionManager : MonoBehaviour
             //set handmodel to exoskeleton
             gm.leftHand.enhancedMultiplyer = gm.enhancedThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.enhancedThrowMultiplyer;
-            if (gm.storyTime)
-            {
-                
-            }
-            else
-            {
-
-            }
         }
         else if (im == InteractionMethod.normal)
         {
             //set handmodel to normal glove
             gm.leftHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
-            if (gm.storyTime)
-            {
-
-            }
-            else
-            {
-
-            }
         }
         else
         {
@@ -67,18 +51,10 @@ public class CompetitionManager : MonoBehaviour
             gm.rightHand.enhancedMultiplyer = gm.defaultThrowMultiplyer;
             Debug.Log("activating laser because we are doing magic========");
             Pointer.activateLaser = true;
-            if (gm.storyTime)
-            {
-
-            }
-            else
-            {
-
-            }
         }
         competitors.Add(new Competitor("YOU"));
         gm.pm.Repopulate();
-        gm.target.gameObject.SetActive(true);
+        //gm.target.gameObject.SetActive(true);
 
         if (true)
         {
@@ -151,7 +127,7 @@ public class CompetitionManager : MonoBehaviour
 
         if (competitor != null)
         {
-            competitor.score += Random.Range(0, 4) * 25;
+            competitor.score += Random.Range(1, 5) * 25;
         }
 
         competitors.Sort();

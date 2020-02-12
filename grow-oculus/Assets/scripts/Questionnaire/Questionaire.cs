@@ -89,7 +89,7 @@ public class Questionaire : MonoBehaviour
         try
         {
             //remove/destroy indicators
-            activeProjectile.DestroyProjectile();
+            activeProjectile.HideOnTarget();
         }
         catch
         {

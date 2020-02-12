@@ -82,6 +82,10 @@ public class Pointer : MonoBehaviour
                 ray.transform.position = new Vector3(0, -100, 0);
                 ray.Stop();
                 SpawnBlackHole();
+
+                //spawn dart in front of player
+                gm.pm.spawners[0].ForceSpawnProjectile(gm.mainHand.transform.parent);
+
                 stage = LaserStages.enhanceAndThrow;
             }
         }

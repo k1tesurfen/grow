@@ -13,7 +13,7 @@ public class ExplorationManager : MonoBehaviour
     {
         points = 0;
         gm.pm.Repopulate();
-        gm.target.gameObject.SetActive(true);
+        //gm.target.gameObject.SetActive(true);
 
         if (im == InteractionMethod.enhanced)
         {
@@ -53,18 +53,27 @@ public class ExplorationManager : MonoBehaviour
         //destroy snowballs from previous questionnaire mode.
         gm.qm.spawnPlatform.GetComponent<Spawner>().ClearProjectiles();
 
-        if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
-        {
-            //make linerenderer and particlesystem disappear after condition
-            gm.mainHand.GetComponent<Pointer>().lineRenderer.enabled = false;
-            gm.mainHand.GetComponent<Pointer>().ray.transform.position = new Vector3(0, -100, 0);
-            gm.mainHand.GetComponent<Pointer>().ray.Stop();
-            gm.offHand.GetComponent<Pointer>().lineRenderer.enabled = false;
-            gm.offHand.GetComponent<Pointer>().ray.transform.position = new Vector3(0, -100, 0);
-            gm.offHand.GetComponent<Pointer>().ray.Stop();
+        //if (gm.currentInteractionMethod == InteractionMethod.magical && gm.blackHole.GetComponent<Attractor>().doAttract)
+        //{
+        //    //make linerenderer and particlesystem disappear after condition
+        //    gm.mainHand.GetComponent<Pointer>().lineRenderer.enabled = false;
+        //    gm.mainHand.GetComponent<Pointer>().ray.transform.position = new Vector3(0, -100, 0);
+        //    gm.mainHand.GetComponent<Pointer>().ray.Stop();
+        //    gm.offHand.GetComponent<Pointer>().lineRenderer.enabled = false;
+        //    gm.offHand.GetComponent<Pointer>().ray.transform.position = new Vector3(0, -100, 0);
+        //    gm.offHand.GetComponent<Pointer>().ray.Stop();
 
+        //    AdJustParticleSystem.Collapse();
+        //}
+
+        //after the condition no lasers should be visible
+        if (gm.currentInteractionMethod == InteractionMethod.magical)
+        {
+            gm.mainHand.GetComponent<Pointer>().HideVisuals();
+            gm.offHand.GetComponent<Pointer>().HideVisuals();
             AdJustParticleSystem.Collapse();
         }
+        Pointer.activateLaser = false;
 
         gm.qm.StartQuestionnaireMode();
     }

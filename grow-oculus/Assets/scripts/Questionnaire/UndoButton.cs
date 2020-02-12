@@ -12,6 +12,7 @@ public class UndoButton : MonoBehaviour
     public Vector3 rotationRight = new Vector3(0f, 120f, 0f);
 
     private bool bulpOn = false;
+    public bool isSwitchable = false;
 
     public Material defaultMaterial;
     public Material highlightedMaterial;
@@ -23,7 +24,10 @@ public class UndoButton : MonoBehaviour
         if (other.gameObject.CompareTag("handCollider"))
         {
             SwitchLightBulp();
-            qm.RedoRecentQuestion();
+            if (isSwitchable)
+            {
+                qm.RedoRecentQuestion();
+            }
             StartCoroutine(JanDelay(1f));
         }
     }

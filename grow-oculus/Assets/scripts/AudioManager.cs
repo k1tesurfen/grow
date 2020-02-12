@@ -10,6 +10,10 @@ public class AudioManager : MonoBehaviour
 
     public Sound[] sounds;
 
+    public float waitingTime = 0f;
+
+    public bool isAudioPlaying = false;
+
     private void Awake()
     {
         //populate audiomanager with audiosources.
@@ -22,11 +26,30 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        //reduce time to wait 
+        waitingTime -= Time.deltaTime;
+        if(waitingTime < 0f)
+        {
+            waitingTime = 0f;
+            isAudioPlaying = false;
+        }
+    }
+
     //plays sound with name name
     public void Play(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         s.source.Play();
+    }
+
+    public void AddToQueue(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        StartCoroutine(JanDelay(waitingTime, s));
+        waitingTime += s.source.clip.length + 1f;
+        isAudioPlaying = true;
     }
 
     public void Play(string[] name)
@@ -36,7 +59,7 @@ public class AudioManager : MonoBehaviour
         {
             Sound clip = Array.Find(sounds, sound => sound.name == s);
             StartCoroutine(JanDelay(length, clip));
-            length += clip.source.clip.length + 2f;
+            length += clip.source.clip.length + 1f;
         } 
     }
 

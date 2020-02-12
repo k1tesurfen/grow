@@ -82,9 +82,11 @@ public class Spawner : MonoBehaviour
     }
 
     //for manually adding Projectiles to the spawners
-    public void ForceSpawnProjectile(Vector3 position, Quaternion rotation)
+    public void ForceSpawnProjectile(Transform parent)
     {
-        projectile = Instantiate(spawnObject, position, rotation, transform);
+        projectile = Instantiate(spawnObject, parent.transform);
+        projectile.transform.localPosition = new Vector3(0f, 2f, 0.5f);
+        projectile.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
         projectile.GetComponent<Projectile>().gm = gm;
         projectile.GetComponent<Projectile>().projectileLogger = projectileLogger;
         projectile.GetComponent<Projectile>().grabbable = projectile.GetComponent<OVRGrabbable>();
@@ -94,6 +96,7 @@ public class Spawner : MonoBehaviour
 
         if (!spawnForQuestionnaire)
         {
+            projectile.GetComponent<Animator>().Play("ComeCloser");
             spawnedProjectiles.Add(projectile);
         }
     }
