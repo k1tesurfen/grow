@@ -8,10 +8,18 @@ public class LatinSquare : MonoBehaviour
 
     public int[,] latinSquareScenario = new int[,] { { 0, 1 }, { 1, 0 } };
 
-    public int interactionIndex = -1;
-    public int scenarioIndex = 2;
+    [HideInInspector]
+    public int interactionIndex;
+    [HideInInspector]
+    public int scenarioIndex;
 
     public bool finished = false;
+
+    private void Start()
+    {
+        interactionIndex = -1;
+        scenarioIndex = 2;
+    }
 
     //returns the interaction method the player has to play.
     public InteractionMethod GetInteractionMethod()
@@ -43,7 +51,7 @@ public class LatinSquare : MonoBehaviour
                             gm.audioManager.AddToQueue("storymagical");
                             break;
                     }
-                    
+
                 }
                 else
                 {

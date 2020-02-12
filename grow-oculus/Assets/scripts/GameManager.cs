@@ -183,6 +183,7 @@ public class GameManager : MonoBehaviour
                         explorationManager.StartExploration(currentInteractionMethod);
                     }
                     testThrowsLabel.gameObject.SetActive(false);
+                    numTestThrows = 3;
                     isWaitingForCondition = false;
                 }
             }
@@ -222,6 +223,7 @@ public class GameManager : MonoBehaviour
         {
             latinSquare.interactionIndex = customInteraction;
             latinSquare.scenarioIndex = customScenario;
+            customStart = false;
         }
         currentInteractionMethod = latinSquare.GetInteractionMethod();
         currentScenario = latinSquare.GetScenario();
